@@ -1,6 +1,6 @@
 # vue-express-jwt
 
-> A Vue.js project
+> A Vue.js example project
 > vue front end
 > graphql backend, auth by jwt
 

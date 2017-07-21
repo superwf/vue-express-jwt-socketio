@@ -31,6 +31,9 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+jwt(app)
+graphql(app)
+
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
@@ -69,8 +72,6 @@ app.use(devMiddleware)
 // compilation error display
 app.use(hotMiddleware)
 
-jwt(app)
-graphql(app)
 
 // serve pure static assets
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
@@ -83,13 +84,13 @@ var readyPromise = new Promise(resolve => {
   _resolve = resolve
 })
 
-console.log('> Starting dev server...')
+console.log('Starting dev server...')
 devMiddleware.waitUntilValid(() => {
-  console.log('> Listening at ' + uri + '\n')
+  console.log('Listening at ' + uri + '\n')
   // when env is testing, don't need open it
-  // if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
-  //   opn(uri)
-  // }
+  if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
+    opn(uri)
+  }
   _resolve()
 })
 

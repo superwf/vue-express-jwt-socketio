@@ -3,7 +3,6 @@ import graphqlExpress from 'express-graphql'
 import schema from './schema'
 
 export default function (app) {
-  // console.log(app)
   app.use('/graphql', graphqlExpress({
     schema,
     graphiql: true

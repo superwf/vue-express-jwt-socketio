@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <form @submit="submit">
+    <form @submit.prevent="submit">
       <input name="name" v-model="name" />
       <input name="password" v-model="password" />
       <button>login</button>
@@ -13,14 +13,27 @@
       <p>token is {{ token }}</p>
       <p>userByToken: {{ userByToken.user }}</p>
     </div>
-    <p>user fetched from graphql: {{ user }}</p>
+    <ul>
+      <li v-for="u in users">{{ u.id }} : {{ u.name }}</li>
+    </ul>
+
+    <form @submit.prevent="updateUser">
+      <input v-model="newUserName" />
+      <button>update user1 name</button>
+    </form>
+    <form @submit.prevent="createUser">
+      <input v-model="newUserName" />
+      <button>create user</button>
+    </form>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 // import gql from 'graphql-tag'
-import userGql from '../gql/user.gql'
+import usersGql from '../gql/users.gql'
+import updateUserGql from '../gql/updateUser.gql'
+import createUserGql from '../gql/createUser.gql'
 
 export default {
   name: 'hello',
@@ -29,21 +42,19 @@ export default {
       name: 'wf',
       password: 'sdf',
       token: '',
+      newUserName: 'new Name xxx',
       userByToken: null,
-      user: null
+      user: null,
+      users: []
     }
   },
   apollo: {
-    user: {
-      query: userGql,
-      variables: {
-        id: 0
-      }
+    users: {
+      query: usersGql
     }
   },
   methods: {
-    submit ($event) {
-      $event.preventDefault()
+    submit () {
       axios.post('/login', {
         user: this.name,
         password: this.password
@@ -56,6 +67,29 @@ export default {
     testToken () {
       axios.get('/dashboard').then(data => {
         this.userByToken = data.data
+      })
+    },
+
+    updateUser () {
+      this.$apollo.mutate({
+        mutation: updateUserGql,
+        variables: {
+          user: {
+            id: this.users[0].id,
+            name: this.newUserName
+          }
+        }
+      })
+    },
+    createUser () {
+      this.$apollo.mutate({
+        mutation: createUserGql,
+        variables: {
+          user: {
+            id: this.users[0].id,
+            name: this.newUserName
+          }
+        }
       })
     }
   }

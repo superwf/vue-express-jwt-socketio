@@ -1,1 +1,1 @@
-query getFirstUser($id: Int!) { user(id: $id) { id name } }
+query getUser($id: Int!) { user(id: $id) { id name } }

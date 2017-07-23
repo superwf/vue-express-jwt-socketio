@@ -8,16 +8,20 @@
     <center v-if="token">
       <button @click="testToken" v-if="token">get user from api by token</button>
     </center>
-    <div v-if="user">
+    <div v-if="userByToken">
       <h2>fetched data from api by token</h2>
       <p>token is {{ token }}</p>
-      <p>user data {{ user }}</p>
+      <p>userByToken: {{ userByToken.user }}</p>
     </div>
+    <p>user fetched from graphql: {{ user }}</p>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+// import gql from 'graphql-tag'
+import userGql from '../gql/user.gql'
+
 export default {
   name: 'hello',
   data () {
@@ -25,7 +29,16 @@ export default {
       name: 'wf',
       password: 'sdf',
       token: '',
+      userByToken: null,
       user: null
+    }
+  },
+  apollo: {
+    user: {
+      query: userGql,
+      variables: {
+        id: 0
+      }
     }
   },
   methods: {
@@ -37,11 +50,12 @@ export default {
       }).then(data => {
         this.token = data.data.token
         axios.defaults.headers.common.Authorization = `Bearer ${this.token}`
+        axios.defaults.headers.common.accept = 'applocation/json'
       })
     },
     testToken () {
       axios.get('/dashboard').then(data => {
-        this.user = data.data
+        this.userByToken = data.data
       })
     }
   }

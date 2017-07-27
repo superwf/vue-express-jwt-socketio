@@ -1,0 +1,3 @@
+subscription userAdded {
+  userAdded { id name }
+}

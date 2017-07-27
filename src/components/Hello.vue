@@ -25,6 +25,7 @@
       <input v-model="newUserName" />
       <button>create user</button>
     </form>
+    <button @click="sendByAxios">SEND GRAPHQL BY axios</button>
   </div>
 </template>
 
@@ -32,8 +33,12 @@
 import axios from 'axios'
 // import gql from 'graphql-tag'
 import usersGql from '../gql/users.gql'
+import clientsGql from '../gql/clients.gql'
 import updateUserGql from '../gql/updateUser.gql'
 import createUserGql from '../gql/createUser.gql'
+import subscribeUser from '../gql/subscribeUser.gql'
+
+// console.log(usersGql)
 
 export default {
   name: 'hello',
@@ -45,13 +50,54 @@ export default {
       newUserName: 'new Name xxx',
       userByToken: null,
       user: null,
-      users: []
+      users: [],
+      loadingUsers: 0,
+      skip: true,
     }
   },
   apollo: {
     users: {
-      query: usersGql
-    }
+      query: usersGql,
+      // skip () {
+      //   return this.skip
+      // },
+      // fetchPolicy: 'cache-and-network',
+      // pollInterval: 1000,
+      loadingKey: 'loadingUsers',
+      subscribeToMore: {
+        document: subscribeUser,
+        updateQuery: (previousResult, { subscriptionData }) => {
+          console.log(previousResult)
+          const user = subscriptionData.data.userAdded
+          console.log(222, user)
+          return {
+            ...previousResult,
+            users: [...previousResult.users, user],
+          }
+          // previousResult.users.push(user)
+          // this.users = [...this.users, user]
+          // this.users.push(user)
+        }
+      }
+    },
+  },
+  mounted () {
+    // setTimeout(() => {
+    //   this.skip = false
+    // }, 1000)
+    // const observer = this.$apollo.subscribe({
+    //   query: subscribeUser
+    // })
+    // const self = this
+    // observer.subscribe({
+    //   next (data) {
+    //     console.log(111, data)
+    //     self.users.push(data.userAdded)
+    //   },
+    //   error (e) {
+    //     console.error(e)
+    //   }
+    // })
   },
   methods: {
     submit () {
@@ -72,6 +118,10 @@ export default {
     },
 
     updateUser () {
+      // console.log(this.$apollo)
+      this.$apollo.query({
+        query: clientsGql
+      }).then(console.log)
       this.$apollo.mutate({
         mutation: updateUserGql,
         variables: {
@@ -87,11 +137,16 @@ export default {
         mutation: createUserGql,
         variables: {
           user: {
-            id: this.users[0].id,
+            id: 0,
             name: this.newUserName
           }
         }
       })
+    },
+    sendByAxios () {
+      console.log(usersGql)
+      // axios.post('/grqphql', {
+      // })
     }
   }
 }

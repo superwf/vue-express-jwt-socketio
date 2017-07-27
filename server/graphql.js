@@ -3,50 +3,44 @@ import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
 import schema from './schema'
 import jwt from 'express-jwt'
 import config from '../config'
-
-const fakeData = {
-  user: [{
-    id: 1,
-    name: 'user1'
-  }, {
-    id: 2,
-    name: 'user2'
-  }]
-}
+// import { PubSub, SubscriptionManager  } from 'graphql-subscriptions'
+import { SubscriptionServer } from 'subscriptions-transport-ws'
+import { createServer } from 'http'
+import { execute, subscribe } from 'graphql'
+// import { pubsub } from './subscriptions'
 
 const jwtMiddleware = jwt({
   secret: config.dev.secret
 })
 
+// const USER_ADDED = 'USER_ADDED'
+
 export default function (app) {
   app.use('/graphql', jwtMiddleware, function (...args) {
-    const [req, ..._] = args
+    // const [req] = args
     return graphqlExpress({
       schema,
-      rootValue: {
-        user ({id}) {
-          return fakeData.user[id]
-        },
-        users () {
-          return fakeData.user
-        },
-        updateUser ({user}, context) {
-          const originUser = fakeData.user.find(u => u.id === user.id)
-          originUser.name = user.name
-          return originUser
-        },
-        createUser ({user}) {
-          user.id = fakeData.user.length + 1
-          fakeData.user.push(user)
-          return user
-        }
-      },
-      context: {
-        user: req.user,
-        db: 'xxxxxx',
-      }
     })(...args)
   })
 
   app.use('/graphiql', graphiqlExpress({ schema }))
+
+  const websocketServer = createServer((req, res) => {
+    res.writeHead(404)
+    res.end()
+  })
+  websocketServer.listen(5000, () => {
+    console.log('websocket listen at 5000')
+  })
+
+  const subscriptionServer = new SubscriptionServer({
+    schema,
+    execute,
+    subscribe,
+  }, {
+    server: websocketServer,
+    path: '/subscriptions',
+  })
+
+  // console.log(subscriptionServer)
 }

@@ -1,0 +1,1 @@
+query getClients { clients { id name } }

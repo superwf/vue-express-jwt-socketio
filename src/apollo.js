@@ -10,12 +10,23 @@ const networkInterface = createBatchingNetworkInterface({
 })
 
 const wsClient = new SubscriptionClient('ws://localhost:5000/subscriptions', {
-  reconnect: true
+  reconnect: true,
+  reconnectionAttempts: 10,
+  connectionParams: {
+    token: localStorage.getItem('token')
+  }
 })
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   networkInterface,
   wsClient,
 )
+wsClient.use([{
+  applyMiddleware (req, next) {
+    console.log(req)
+    console.log(req.headers)
+    next()
+  }
+}])
 
 networkInterface.use([{
   applyBatchMiddleware (req, next) {
@@ -24,7 +35,7 @@ networkInterface.use([{
     }
     const token = localStorage.getItem('token')
     if (token) {
-      req.options.headers.authorization = token
+      req.options.headers.authorization = `Bearer ${token}`
       next()
     } else {
       alert('no auth')

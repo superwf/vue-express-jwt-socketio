@@ -1,7 +1,8 @@
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
 // import { graphql } from 'graphql'
 import schema from './schema'
-import jwt from 'express-jwt'
+import expressJwt from 'express-jwt'
+import jwt from 'jsonwebtoken'
 import config from '../config'
 // import { PubSub, SubscriptionManager  } from 'graphql-subscriptions'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
@@ -9,7 +10,7 @@ import { createServer } from 'http'
 import { execute, subscribe } from 'graphql'
 // import { pubsub } from './subscriptions'
 
-const jwtMiddleware = jwt({
+const jwtMiddleware = expressJwt({
   secret: config.dev.secret
 })
 
@@ -37,6 +38,17 @@ export default function (app) {
     schema,
     execute,
     subscribe,
+    onConnect (params, websocket) {
+      try {
+        const user = jwt.verify(params.token, config.dev.secret)
+        if (user.exp * 1000 < Date.now()) {
+          websocket.close()
+          throw new Error('token expired')
+        }
+      } catch (e) {
+        websocket.close()
+      }
+    }
   }, {
     server: websocketServer,
     path: '/subscriptions',

@@ -13,7 +13,8 @@ export default function jwtApp (app) {
     '/login',
     function (req, res) {
       const { user, password } = req.body
-      const token = jsonwebtoken.sign({ user }, config.dev.secret, {
+      console.log(user, password)
+      const token = jsonwebtoken.sign({ name: user }, config.dev.secret, {
         expiresIn: '1d'
       })
       res.json({
@@ -31,7 +32,7 @@ export default function jwtApp (app) {
       res.json(req.user)
     }
   )
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
       res.status(401).send('no auth')
     } else {

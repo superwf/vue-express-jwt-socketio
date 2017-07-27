@@ -67,9 +67,9 @@ export default {
       subscribeToMore: {
         document: subscribeUser,
         updateQuery: (previousResult, { subscriptionData }) => {
-          console.log(previousResult)
+          // console.log(previousResult)
           const user = subscriptionData.data.userAdded
-          console.log(222, user)
+          // console.log(222, user)
           return {
             ...previousResult,
             users: [...previousResult.users, user],
@@ -107,7 +107,7 @@ export default {
       }).then(data => {
         this.token = data.data.token
         axios.defaults.headers.common.Authorization = `Bearer ${this.token}`
-        localStorage.setItem('token', `Bearer ${this.token}`)
+        localStorage.setItem('token', this.token)
         axios.defaults.headers.common.accept = 'applocation/json'
       })
     },
@@ -144,7 +144,7 @@ export default {
       })
     },
     sendByAxios () {
-      console.log(usersGql)
+      // console.log(usersGql)
       // axios.post('/grqphql', {
       // })
     }

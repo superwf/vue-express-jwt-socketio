@@ -14,7 +14,7 @@ export default function jwtApp (app) {
     function (req, res) {
       const { user, password } = req.body
       console.log(user, password)
-      const token = jsonwebtoken.sign({ name: user }, config.dev.secret, {
+      const token = jsonwebtoken.sign({ name: user }, config.jwtSecret, {
         expiresIn: '1d'
       })
       res.json({
@@ -26,7 +26,7 @@ export default function jwtApp (app) {
   app.use(
     '/dashboard',
     jwt({
-      secret: config.dev.secret
+      secret: config.jwtSecret
     }),
     function (req, res) {
       res.json(req.user)

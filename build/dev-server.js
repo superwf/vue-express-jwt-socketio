@@ -1,10 +1,8 @@
 require('babel-register')({
   presets: ['es2015']
 })
-const jwt = require('../server/jwt').default
-const graphql = require('../server/graphql').default
-// import jwt from '../server/jwt'
-// import graphql from '../server/graphql'
+const express = require('express')
+const { app, server } = require('../server/app')
 
 require('./check-versions')()
 
@@ -15,7 +13,6 @@ if (!process.env.NODE_ENV) {
 
 var opn = require('opn')
 var path = require('path')
-var express = require('express')
 var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = process.env.NODE_ENV === 'testing'
@@ -29,10 +26,6 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 // Define HTTP proxies to your custom API backend
 // https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
-
-var app = express()
-jwt(app)
-graphql(app)
 
 var compiler = webpack(webpackConfig)
 
@@ -94,7 +87,10 @@ devMiddleware.waitUntilValid(() => {
   _resolve()
 })
 
-var server = app.listen(port)
+// var server = app.listen(port)
+server.listen(8080, () => {
+  console.log('websocket listen at 5000')
+})
 
 module.exports = {
   ready: readyPromise,

@@ -1,4 +1,5 @@
 import { pubsub } from './subscriptions'
+import User from './models/user'
 
 const fakeData = {
   user: [{
@@ -18,7 +19,7 @@ export default {
       return fakeData.user[id]
     },
     users () {
-      return fakeData.user
+      return User.findAll()
     },
     clients () {
       return fakeData.user
@@ -26,16 +27,16 @@ export default {
   },
   Mutation: {
     updateUser (_, {user}, context) {
-      const originUser = fakeData.user.find(u => u.id === user.id)
-      originUser.name = user.name
-      return originUser
+      return User.findById(user.id).then(u => {
+        u.name = user.name
+        return u.save()
+      })
     },
     createUser (_, {user}) {
-      user.id = fakeData.user.length + 1
-      console.log(user)
-      fakeData.user.push(user)
-      pubsub.publish(USER_ADDED, { userAdded: user })
-      return user
+      return User.create(user).then(newUser => {
+        pubsub.publish(USER_ADDED, { userAdded: newUser })
+        return newUser
+      })
     },
   },
   Subscription: {

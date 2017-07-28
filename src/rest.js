@@ -2,7 +2,7 @@
  * 默认导出函数
  * */
 import axios from 'axios'
-import config from 'src/config'
+import config from 'lib/config'
 import Event from 'src/event'
 
 export const emitter = new Event()

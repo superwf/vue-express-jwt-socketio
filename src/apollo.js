@@ -9,7 +9,7 @@ const networkInterface = createBatchingNetworkInterface({
   // transportBatching: true,
 })
 
-const wsClient = new SubscriptionClient('ws://localhost:5000/subscriptions', {
+const wsClient = new SubscriptionClient('ws://localhost:8080/subscriptions', {
   reconnect: true,
   reconnectionAttempts: 10,
   connectionParams: {
@@ -20,13 +20,13 @@ const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   networkInterface,
   wsClient,
 )
-wsClient.use([{
-  applyMiddleware (req, next) {
-    console.log(req)
-    console.log(req.headers)
-    next()
-  }
-}])
+// wsClient.use([{
+//   applyMiddleware (req, next) {
+//     console.log(req)
+//     console.log(req.headers)
+//     next()
+//   }
+// }])
 
 networkInterface.use([{
   applyBatchMiddleware (req, next) {

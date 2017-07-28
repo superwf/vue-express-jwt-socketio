@@ -1,11 +1,17 @@
+require('babel-register')({
+  presets: ['es2015']
+})
 const cp = require('child_process')
 const fs = require('fs')
 const debounce = require('lodash/debounce')
 
-let serverProcess = cp.fork('build/dev-server')
+const main = 'server/main'
+
+let serverProcess = cp.fork(main)
 
 const log = console.log
 
+// 在开发模式运行，当server中的文件更改时重启服务
 fs.watch('./server', {
   encoding: 'utf8'
 }, debounce(() => {
@@ -15,6 +21,6 @@ fs.watch('./server', {
   } catch (e) {
     log(`last server process kill failed, error: ${e}`)
   } finally {
-    serverProcess = cp.fork('build/dev-server')
+    serverProcess = cp.fork(main)
   }
 }, 1000))

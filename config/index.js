@@ -1,7 +1,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
 
-module.exports = {
+const config = {
   build: {
     env: require('./prod.env'),
     index: path.resolve(__dirname, '../dist/index.html'),
@@ -19,10 +19,17 @@ module.exports = {
     // View the bundle analyzer report after build finishes:
     // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
-    bundleAnalyzerReport: process.env.npm_config_report
+    bundleAnalyzerReport: process.env.npm_config_report,
+    jwtSecret: 'yourproductionjwtsecret',
+    mysql: {
+      database: 'test',
+      username: 'test',
+      password: 'test',
+    },
   },
   dev: {
     env: require('./dev.env'),
+    host: 'localhost',
     port: 8080,
     autoOpenBrowser: false,
     assetsSubDirectory: 'static',
@@ -34,6 +41,14 @@ module.exports = {
     // In our experience, they generally work as expected,
     // just be aware of this issue when enabling this option.
     cssSourceMap: false,
-    secret: 'sfdasfasdfw8771hu12g3126l81366'
-  }
+    jwtSecret: 'safdasfasfdsafdasf',
+    mysql: {
+      database: 'test',
+      username: 'test',
+      password: 'test',
+    },
+  },
 }
+
+const env = process.env.NODE_ENV === 'production' ? config.build : config.dev
+module.exports = env

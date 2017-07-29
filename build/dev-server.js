@@ -15,7 +15,7 @@ var opn = require('opn')
 var path = require('path')
 var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
-var webpackConfig = process.env.NODE_ENV === 'testing'
+var webpackConfig = process.env.NODE_ENV === 'test'
   ? require('./webpack.prod.conf')
   : require('./webpack.dev.conf')
 
@@ -80,8 +80,8 @@ var readyPromise = new Promise(resolve => {
 console.log('Starting dev server...')
 devMiddleware.waitUntilValid(() => {
   console.log('Listening at ' + uri + '\n')
-  // when env is testing, don't need open it
-  if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
+  // when env is test, don't need open it
+  if (autoOpenBrowser && process.env.NODE_ENV !== 'test') {
     opn(uri)
   }
   _resolve()

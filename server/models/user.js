@@ -6,6 +6,6 @@ const User = db.define('user', {
   password: Sequelize.STRING,
 })
 
-User.sync()
+// User.sync()
 
 export default User

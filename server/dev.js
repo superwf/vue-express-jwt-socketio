@@ -11,7 +11,6 @@ if (!process.env.NODE_ENV) {
 }
 
 export default function (app) {
-  var autoOpenBrowser = !!config.autoOpenBrowser
   // Define HTTP proxies to your custom API backend
   // https://github.com/chimurai/http-proxy-middleware
   var proxyTable = config.proxyTable
@@ -58,7 +57,7 @@ export default function (app) {
   var staticPath = path.posix.join(config.assetsPublicPath, config.assetsSubDirectory)
   app.use(staticPath, express.static('./static'))
 
-  var uri = `${config.host}:${config.port}`
+  var uri = `http://${config.host}:${config.port}`
 
   // var _resolve
   // var readyPromise = new Promise(resolve => {
@@ -68,8 +67,8 @@ export default function (app) {
   console.log('Starting dev server...')
   devMiddleware.waitUntilValid(() => {
     console.log('Listening at ' + uri + '\n')
-    // when env is testing, don't need open it
-    if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
+    // when env is test, don't need open it
+    if (config.autoOpenBrowser) {
       opn(uri)
     }
     // _resolve()

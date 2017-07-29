@@ -1,5 +1,6 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
-var path = require('path')
+const path = require('path')
+const env = require('./env').env
 
 const config = {
   build: {
@@ -27,11 +28,11 @@ const config = {
       password: 'test',
     },
   },
-  dev: {
+  development: {
     env: require('./dev.env'),
     host: 'localhost',
     port: 8080,
-    autoOpenBrowser: false,
+    autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
@@ -48,7 +49,13 @@ const config = {
       password: 'test',
     },
   },
+  test: {
+    mysql: {
+      database: 'test',
+      username: 'test',
+      password: 'test',
+    },
+  },
 }
 
-const env = process.env.NODE_ENV === 'production' ? config.build : config.dev
-module.exports = env
+module.exports = config[env]

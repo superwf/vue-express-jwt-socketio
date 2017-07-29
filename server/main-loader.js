@@ -10,7 +10,6 @@ const main = 'server/main'
 let serverProcess = cp.fork(main)
 
 const log = console.log
-
 // 在开发模式运行，当server中的文件更改时重启服务
 fs.watch('./server', {
   encoding: 'utf8'

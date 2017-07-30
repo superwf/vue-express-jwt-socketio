@@ -1,20 +1,26 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 const path = require('path')
-const env = require('./env').env
+const nodeEnv = require('./env').env
+
+const env = require(`./${nodeEnv}.env`)
+
+const base = {
+  env,
+  index: path.resolve(__dirname, '../dist/index.html'),
+  assetsRoot: path.resolve(__dirname, '../dist'),
+  assetsSubDirectory: 'static',
+  assetsPublicPath: '/',
+}
 
 const config = {
   build: {
-    env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/index.html'),
-    assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    ...base,
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
     // Before setting to `true`, make sure to:
     // npm install --save-dev compression-webpack-plugin
-    productionGzip: false,
+    productionGzip: true,
     productionGzipExtensions: ['js', 'css'],
     // Run the build command with an extra argument to
     // View the bundle analyzer report after build finishes:
@@ -29,12 +35,10 @@ const config = {
     },
   },
   development: {
-    env: require('./dev.env'),
+    ...base,
     host: 'localhost',
     port: 8080,
     autoOpenBrowser: true,
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
     proxyTable: {},
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
@@ -50,6 +54,8 @@ const config = {
     },
   },
   test: {
+    ...base,
+    jwtSecret: 'testsecret',
     mysql: {
       database: 'test',
       username: 'test',
@@ -58,4 +64,4 @@ const config = {
   },
 }
 
-module.exports = config[env]
+module.exports = config[nodeEnv]

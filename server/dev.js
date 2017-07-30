@@ -1,5 +1,4 @@
 import express from 'express'
-import opn from 'opn'
 import path from 'path'
 import webpack from 'webpack'
 import proxyMiddleware from 'http-proxy-middleware'
@@ -59,18 +58,12 @@ export default function (app) {
 
   var uri = `http://${config.host}:${config.port}`
 
-  // var _resolve
-  // var readyPromise = new Promise(resolve => {
-  //   _resolve = resolve
-  // })
-
   console.log('Starting dev server...')
   devMiddleware.waitUntilValid(() => {
     console.log('Listening at ' + uri + '\n')
     // when env is test, don't need open it
     if (config.autoOpenBrowser) {
-      opn(uri)
+      process.send('openBrowser')
     }
-    // _resolve()
   })
 }

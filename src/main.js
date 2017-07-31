@@ -4,13 +4,17 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import apolloProvider from './apollo'
+import generateStore from './store'
 
 Vue.config.productionTip = false
+
+const store = generateStore()
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   // template: '<App/>',
   apolloProvider,
   render: h => h(App)

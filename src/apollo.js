@@ -9,9 +9,9 @@ const networkInterface = createBatchingNetworkInterface({
   // transportBatching: true,
 })
 
-const wsClient = new SubscriptionClient('ws://localhost:8080/subscriptions', {
+export const wsClient = new SubscriptionClient('ws://localhost:8080/subscriptions', {
   reconnect: true,
-  reconnectionAttempts: 10,
+  // reconnectionAttempts: 10,
   connectionParams: {
     token: localStorage.getItem('token')
   }
@@ -20,6 +20,7 @@ const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   networkInterface,
   wsClient,
 )
+// console.log(networkInterfaceWithSubscriptions)
 // wsClient.use([{
 //   applyMiddleware (req, next) {
 //     console.log(req)
@@ -50,7 +51,7 @@ networkInterface.use([{
   }
 }])
 
-const apolloClient = new ApolloClient({
+export const apolloClient = new ApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
   shouldBatch: true,
   connectToDevTools: true

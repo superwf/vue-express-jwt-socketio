@@ -24,6 +24,7 @@ module.exports = {
       'server': resolve('server'),
       'client': resolve('client'),
       'lib': resolve('lib'),
+      'store': resolve('src/store'),
     }
   },
   module: {

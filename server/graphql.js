@@ -2,6 +2,7 @@ import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
 import schema from './schema'
 import expressJwt from 'express-jwt'
 import jwt from 'jsonwebtoken'
+import bodyParser from 'body-parser'
 import config from '../config'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createServer } from 'http'
@@ -12,6 +13,13 @@ const jwtMiddleware = expressJwt({
 })
 
 export default function (app) {
+  const graphqlMime = 'application/graphql'
+  app.use(bodyParser.text({ type: graphqlMime }), (req, res, next) => {
+    if (req.is(graphqlMime)) {
+      req.body = { query: req.body }
+    }
+    next()
+  })
   app.use('/graphql', jwtMiddleware, function (...args) {
     // const [req] = args
     return graphqlExpress({

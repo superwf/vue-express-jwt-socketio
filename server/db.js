@@ -17,8 +17,9 @@ const db = new Sequelize(database, username, password, {
 
 db.authenticate().then(() => {
   // when test, use MEMORY engine for speedup
+  console.log('env-------', isTest)
   if (isTest) {
-    const syncOption = { force: true, engine: 'MEMORY' }
+    const syncOption = { engine: 'MEMORY' }
     db.sync(syncOption)
   }
   console.log('db connect success')

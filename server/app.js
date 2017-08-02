@@ -6,6 +6,6 @@ import dev from './dev'
 const app = express()
 jwt(app)
 dev(app)
-const server = graphql(app)
+graphql(app)
 
-export { app, server }
+export default app

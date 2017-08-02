@@ -3,9 +3,9 @@ require('babel-register')({
   presets: ['es2015']
 })
 const config = require('../config')
-const { server } = require('./app')
+const app = require('./app').default
 
 const { port, host } = config
-server.listen(port, () => {
+app.listen(port, () => {
   console.log(`websocket listen at ${host}:${port}`)
 })

@@ -1,7 +1,9 @@
-import {
-  makeExecutableSchema
-} from 'graphql-tools'
-import resolvers from './resolvers'
+import { buildSchema } from 'graphql'
+// import {
+//   makeExecutableSchema
+// } from 'graphql-tools'
+
+// import resolvers from './resolvers'
 // import {
   // GraphQLSchema,
   // GraphQLObjectType,
@@ -58,8 +60,9 @@ import resolvers from './resolvers'
 // buildSchema就相当于jsx编译一样，将字符编译为graphql的schema嵌套，省得写上面那一大堆乱七八糟的
 const typeDefs = `
 type User {
-  id: Int!
+  id: Int
   name: String!
+  password: String!
 }
 type Client {
   id: Int!
@@ -71,8 +74,9 @@ type Query {
   clients: [Client]!
 }
 input UserInput {
-  id: Int!
+  id: Int
   name: String!
+  password: String!
 }
 
 type Subscription {
@@ -89,8 +93,4 @@ schema {
   subscription: Subscription
 }
 `
-
-export default makeExecutableSchema({
-  typeDefs,
-  resolvers
-})
+export default buildSchema(typeDefs)

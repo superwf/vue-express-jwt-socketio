@@ -10,6 +10,10 @@ const base = {
   assetsRoot: path.resolve(__dirname, '../dist'),
   assetsSubDirectory: 'static',
   assetsPublicPath: '/',
+  defaultUser: {
+    name: 'admin',
+    password: 'admin',
+  }
 }
 
 const config = {

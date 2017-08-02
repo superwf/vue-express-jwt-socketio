@@ -25,6 +25,13 @@ export default {
       return fakeData.user
     },
   },
+  createUser ({ user }) {
+    // console.info(args[0])
+    // return Promise.reject(new Error('asdfasf'))
+    return User.create(user).then(newUser => {
+      return newUser
+    })
+  },
   Mutation: {
     updateUser (_, {user}, context) {
       return User.findById(user.id).then(u => {
@@ -33,6 +40,7 @@ export default {
       })
     },
     createUser (_, {user}) {
+      console.info(_, user)
       return User.create(user).then(newUser => {
         pubsub.publish(USER_ADDED, { userAdded: newUser })
         return newUser

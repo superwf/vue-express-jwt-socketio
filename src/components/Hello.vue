@@ -37,7 +37,7 @@ import clientsGql from '../gql/clients.gql'
 import updateUserGql from '../gql/updateUser.gql'
 import createUserGql from '../gql/createUser.gql'
 // import subscribeUser from '../gql/subscribeUser.gql'
-import { wsClient } from '../apollo'
+// import { wsClient } from '../apollo'
 import { mapState } from 'vuex'
 import { ME } from 'store/types'
 
@@ -47,8 +47,8 @@ export default {
   name: 'hello',
   data () {
     return {
-      name: 'wf',
-      password: 'sdf',
+      name: 'admin',
+      password: 'admin',
       token: '',
       newUserName: 'new Name xxx',
       userByToken: null,
@@ -122,15 +122,15 @@ export default {
   methods: {
     submit () {
       axios.post('/login', {
-        user: this.name,
+        name: this.name,
         password: this.password
       }).then(data => {
         this.token = data.data.token
         axios.defaults.headers.common.Authorization = `Bearer ${this.token}`
         localStorage.setItem('token', this.token)
         axios.defaults.headers.common.accept = 'applocation/json'
-        wsClient.connectionParams.token = this.token
-        wsClient.tryReconnect()
+        // wsClient.connectionParams.token = this.token
+        // wsClient.tryReconnect()
         // this.$apollo.queries.users.subscribeToMore({
         //   document: subscribeUser,
         //   updateQuery: (previousResult, { subscriptionData }) => {
@@ -166,12 +166,13 @@ export default {
       })
     },
     createUser () {
+      console.log(createUserGql)
       this.$apollo.mutate({
         mutation: createUserGql,
         variables: {
           user: {
-            id: 0,
-            name: this.newUserName
+            name: this.newUserName,
+            password: ''
           }
         }
       })

@@ -1,25 +1,25 @@
 import Vue from 'vue'
-import { ApolloClient, createBatchingNetworkInterface } from 'apollo-client'
+import { ApolloClient, createNetworkInterface } from 'apollo-client'
 import VueApollo from 'vue-apollo'
-import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws'
+// import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws'
 
-const networkInterface = createBatchingNetworkInterface({
+const networkInterface = createNetworkInterface({
   uri: 'http://localhost:8080/graphql',
-  batchInterval: 100,
+  // batchInterval: 100,
   // transportBatching: true,
 })
 
-export const wsClient = new SubscriptionClient('ws://localhost:8080/subscriptions', {
-  reconnect: true,
-  // reconnectionAttempts: 10,
-  connectionParams: {
-    token: localStorage.getItem('token')
-  }
-})
-const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
-  networkInterface,
-  wsClient,
-)
+// export const wsClient = new SubscriptionClient('ws://localhost:8080/subscriptions', {
+//   reconnect: true,
+//   // reconnectionAttempts: 10,
+//   connectionParams: {
+//     token: localStorage.getItem('token')
+//   }
+// })
+// const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
+//   networkInterface,
+//   wsClient,
+// )
 // console.log(networkInterfaceWithSubscriptions)
 // wsClient.use([{
 //   applyMiddleware (req, next) {
@@ -30,7 +30,7 @@ const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
 // }])
 
 networkInterface.use([{
-  applyBatchMiddleware (req, next) {
+  applyMiddleware (req, next) {
     if (!req.options.headers) {
       req.options.headers = {}
     }
@@ -43,7 +43,7 @@ networkInterface.use([{
     }
   },
 }]).useAfter([{
-  applyBatchAfterware ({ response }, next) {
+  applyAfterware ({ response }, next) {
     // if (response.status === 401) {
     //   logout()
     // }
@@ -52,7 +52,7 @@ networkInterface.use([{
 }])
 
 export const apolloClient = new ApolloClient({
-  networkInterface: networkInterfaceWithSubscriptions,
+  networkInterface,
   shouldBatch: true,
   connectToDevTools: true
 })

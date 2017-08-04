@@ -6,11 +6,21 @@
 
 <script>
 import LoginForm from 'components/Login'
+import { mapActions } from 'vuex'
+import { ME } from 'store/types'
 export default {
   name: 'app',
   components: {
     LoginForm,
   },
+  beforeMount () {
+    this.me()
+  },
+  methods: {
+    ...mapActions({
+      me: ME
+    })
+  }
 }
 </script>
 

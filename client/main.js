@@ -3,7 +3,6 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import apolloProvider from './apollo'
 import generateStore from './store'
 
 Vue.config.productionTip = false
@@ -15,7 +14,6 @@ generateStore().then(store => {
     router,
     store,
     // template: '<App/>',
-    apolloProvider,
     render: h => h(App)
     // components: { App }
   })

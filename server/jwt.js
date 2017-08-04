@@ -1,5 +1,4 @@
 import jsonwebtoken from 'jsonwebtoken'
-import jwt from 'express-jwt'
 import bodyParser from 'body-parser'
 // import cookieParser from 'cookie-parser'
 import config from '../config'
@@ -16,15 +15,22 @@ export default function jwtApp (app) {
       const { name, password } = req.body
       User.findOne({ where: { name } }).then(user => {
         if (user.password === cryptPassword(password)) {
-          const token = jsonwebtoken.sign({ name: user }, config.jwtSecret, {
+          const token = jsonwebtoken.sign({
+            name: user.name,
+            id: user.id,
+          }, config.jwtSecret, {
             expiresIn: '1d'
           })
           res.json({
-            user,
+            user: {
+              id: user.id,
+              name: user.name,
+            },
             token
           })
+        } else {
+          throw new Error('user name or password not correct')
         }
-        throw new Error('user name or password not correct')
       }).catch(e => {
         res.sendStatus(401)
         res.json({
@@ -33,20 +39,11 @@ export default function jwtApp (app) {
       })
     }
   )
-  app.use(
-    '/dashboard',
-    jwt({
-      secret: config.jwtSecret
-    }),
-    function (req, res) {
-      res.json(req.user)
-    }
-  )
-  app.use(function (err, req, res, next) {
-    if (err.name === 'UnauthorizedError') {
-      res.status(401).send('no auth')
-    } else {
-      next()
-    }
-  })
+  // app.use(function (err, req, res, next) {
+  //   if (err.name === 'UnauthorizedError') {
+  //     res.status(401).send('no auth')
+  //   } else {
+  //     next()
+  //   }
+  // })
 }

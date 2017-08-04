@@ -1,3 +1,4 @@
+export const SOCKET = 'socket'
 export const ME = 'me'
 export const LOADING = 'loading'
 export const USERS = 'users'

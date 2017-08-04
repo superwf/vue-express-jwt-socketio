@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
-import { LOADING } from './types'
+import { LOADING, SOCKET } from './types'
 import getSocket from '@/getSocket'
 
 Vue.use(Vuex)
@@ -9,7 +9,8 @@ Vue.use(Vuex)
 const generateStore = async () => {
   const store = new Vuex.Store({
     state: {
-      loading: 0
+      loading: 0,
+      socket: null
     },
     mutations: {
       [LOADING] (state, payload) {
@@ -19,15 +20,22 @@ const generateStore = async () => {
           state.loading -= 1
         }
       },
+      [SOCKET] (state, socket) {
+        state.socket = socket
+      }
     },
     modules: {
       user
     },
   })
 
+  // store.__proto__.xxxx = 'xxxx'
+
   // bind all 'commit' event from socket
   const socket = await getSocket()
+  store.commit(SOCKET, socket)
   socket.on('vuex', data => {
+    console.log(data)
     if (data.data.errors) {
       console.log(data)
     } else {

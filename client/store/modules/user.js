@@ -1,7 +1,6 @@
 import { ME, USERS, ADD_USER } from 'store/types'
-import { apolloClient } from '../../apollo'
+import meGql from '../../gql/me.gql'
 import usersGql from '../../gql/users.gql'
-import getSocket from '@/getSocket'
 
 export default {
   state: {
@@ -20,14 +19,15 @@ export default {
     },
   },
   actions: {
-    [ME] (_, payload) {
-      return apolloClient.query({
-        query: usersGql.replace(/\n|\r/, '')
-      }).then(console.log)
+    [ME] (context) {
+      context.rootState.socket.emit('query', {
+        type: ME,
+        query: meGql,
+        variables: { token: localStorage.getItem('token') }
+      })
     },
-    async [USERS] () {
-      const socket = await getSocket()
-      socket.emit('query', {
+    [USERS] (context) {
+      context.rootState.socket.emit('query', {
         type: USERS,
         query: usersGql
       })

@@ -1,6 +1,17 @@
 import User from '../models/user'
+import jwt from 'jsonwebtoken'
+import config from '../../config'
 
 export default {
+  me ({token}) {
+    try {
+      const user = jwt.verify(token, config.jwtSecret)
+      console.log(user)
+      return user
+    } catch (e) {
+      return Promise.reject(e)
+    }
+  },
   user ({id}) {
     return User.findOne({
       where: { id }

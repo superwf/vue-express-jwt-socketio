@@ -62,7 +62,7 @@ const typeDefs = `
 type User {
   id: Int
   name: String!
-  password: String!
+  password: String
 }
 type Client {
   id: Int!
@@ -70,6 +70,7 @@ type Client {
 }
 type Query {
   user(id: Int!): User
+  me(token: String!): User
   users: [User]!
   clients: [Client]!
 }

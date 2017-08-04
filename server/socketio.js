@@ -32,7 +32,7 @@ export default function socketIO (app) {
   io.on('connection', socket => {
     const { token } = socket.handshake.query
     if (!verifyToken(token)) {
-      socket.emit('auth error')
+      socket.emit('no-auth')
       return socket.disconnect()
     }
     socket.on('query', query => {

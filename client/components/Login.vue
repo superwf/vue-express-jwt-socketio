@@ -23,7 +23,7 @@ export default {
         password: this.password
       }).then(data => {
         this.token = data.data.token
-        axios.defaults.headers.common.Authorization = `Bearer ${this.token}`
+        // axios.defaults.headers.common.Authorization = `Bearer ${this.token}`
         localStorage.setItem('token', this.token)
       })
     },

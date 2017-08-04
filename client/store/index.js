@@ -27,13 +27,15 @@ const generateStore = async () => {
 
   // bind all 'commit' event from socket
   const socket = await getSocket()
-  socket.on('commit', data => {
-    console.log(data)
+  socket.on('vuex', data => {
     if (data.data.errors) {
       console.log(data)
     } else {
       store.commit(data.type, data.data)
     }
+  })
+  socket.on('error', data => {
+    store.commit(data.type, data.data)
   })
   return store
 }

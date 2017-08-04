@@ -1,10 +1,5 @@
 <template>
   <div class="hello">
-    <form @submit.prevent="submit">
-      <input name="name" v-model="name" />
-      <input name="password" v-model="password" />
-      <button>login</button>
-    </form>
     <center v-if="token">
       <button @click="testToken" v-if="token">get user from api by token</button>
     </center>
@@ -25,17 +20,10 @@
       <input v-model="newUserName" />
       <button>create user</button>
     </form>
-    <button @click="sendByAxios">SEND GRAPHQL BY axios</button>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-// import gql from 'graphql-tag'
-// import usersGql from '../gql/users.gql'
-import updateUserGql from '../gql/updateUser.gql'
-// import subscribeUser from '../gql/subscribeUser.gql'
-// import { wsClient } from '../apollo'
 import { mapState, mapActions } from 'vuex'
 import { ME, ADD_USER, USERS } from 'store/types'
 
@@ -70,33 +58,6 @@ export default {
     ...mapActions({
       fetchUsers: USERS
     }),
-    submit () {
-      axios.post('/login', {
-        name: this.name,
-        password: this.password
-      }).then(data => {
-        this.token = data.data.token
-        axios.defaults.headers.common.Authorization = `Bearer ${this.token}`
-        localStorage.setItem('token', this.token)
-      })
-    },
-    testToken () {
-      axios.get('/dashboard').then(data => {
-        this.userByToken = data.result
-      })
-    },
-
-    updateUser () {
-      this.$apollo.mutate({
-        mutation: updateUserGql,
-        variables: {
-          user: {
-            id: this.users[0].id,
-            name: this.newUserName
-          }
-        }
-      })
-    },
     createUser () {
       this.$store.dispatch('query', {
         query: `mutation createUser($user: UserInput) {

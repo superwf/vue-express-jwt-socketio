@@ -1,13 +1,16 @@
-<template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view></router-view>
-  </div>
+<template lang="pug">
+#app
+  router-view
+  login-form
 </template>
 
 <script>
+import LoginForm from 'components/Login'
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    LoginForm,
+  },
 }
 </script>
 

@@ -2,11 +2,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
 import { LOADING } from './types'
+import getSocket from '@/getSocket'
 
 Vue.use(Vuex)
 
-const generateStore = () => {
-  return new Vuex.Store({
+const generateStore = async () => {
+  const store = new Vuex.Store({
     state: {
       loading: 0
     },
@@ -23,5 +24,17 @@ const generateStore = () => {
       user
     },
   })
+
+  // bind all 'commit' event from socket
+  const socket = await getSocket()
+  socket.on('commit', data => {
+    console.log(data)
+    if (data.data.errors) {
+      console.log(data)
+    } else {
+      store.commit(data.type, data.data)
+    }
+  })
+  return store
 }
 export default generateStore

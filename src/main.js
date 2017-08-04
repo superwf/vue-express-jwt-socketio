@@ -8,15 +8,15 @@ import generateStore from './store'
 
 Vue.config.productionTip = false
 
-const store = generateStore()
-
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  store,
-  // template: '<App/>',
-  apolloProvider,
-  render: h => h(App)
-  // components: { App }
+generateStore().then(store => {
+  /* eslint-disable no-new */
+  new Vue({
+    el: '#app',
+    router,
+    store,
+    // template: '<App/>',
+    apolloProvider,
+    render: h => h(App)
+    // components: { App }
+  })
 })

@@ -33,15 +33,11 @@
 import axios from 'axios'
 // import gql from 'graphql-tag'
 // import usersGql from '../gql/users.gql'
-import clientsGql from '../gql/clients.gql'
 import updateUserGql from '../gql/updateUser.gql'
-import createUserGql from '../gql/createUser.gql'
 // import subscribeUser from '../gql/subscribeUser.gql'
 // import { wsClient } from '../apollo'
-import { mapState } from 'vuex'
-import { ME } from 'store/types'
-
-// console.log(usersGql)
+import { mapState, mapActions } from 'vuex'
+import { ME, ADD_USER, USERS } from 'store/types'
 
 export default {
   name: 'hello',
@@ -53,7 +49,6 @@ export default {
       newUserName: 'new Name xxx',
       userByToken: null,
       user: null,
-      users: [],
       loadingUsers: 0,
       skip: true,
     }
@@ -62,64 +57,19 @@ export default {
     ...mapState({
       me (state) {
         return state.user.me
+      },
+      users (state) {
+        return state.user.users
       }
     })
   },
-  // apollo: {
-  //   users: {
-  //     query: usersGql,
-  //     // skip () {
-  //     //   return this.skip
-  //     // },
-  //     // fetchPolicy: 'cache-and-network',
-  //     // pollInterval: 1000,
-  //     loadingKey: 'loadingUsers',
-  //     error (error) {
-  //       const { status } = error.networkError.response
-  //       if (status === 401) {
-  //         console.log(wsClient.reconnect)
-  //         // wsClient.close(true, true)
-  //       }
-  //     },
-  //     result () {
-  //       console.log(wsClient)
-  //     },
-  //     subscribeToMore: {
-  //       document: subscribeUser,
-  //       updateQuery: (previousResult, { subscriptionData }) => {
-  //         // console.log(previousResult)
-  //         const user = subscriptionData.data.userAdded
-  //         // console.log(222, user)
-  //         return {
-  //           ...previousResult,
-  //           users: [...previousResult.users, user],
-  //         }
-  //         // previousResult.users.push(user)
-  //         // this.users = [...this.users, user]
-  //         // this.users.push(user)
-  //       }
-  //     }
-  //   },
-  // },
-  mounted () {
-    // setTimeout(() => {
-    //   this.skip = false
-    // }, 1000)
-    // const observer = this.$apollo.subscribe({
-    //   query: subscribeUser
-    // })
-    // const self = this
-    // observer.subscribe({
-    //   next (data) {
-    //     console.log(111, data)
-    //     self.users.push(data.userAdded)
-    //   },
-    //   error (e) {
-    //     console.error(e)
-    //   }
-    // })
+  beforeMount () {
+    this.fetchUsers()
   },
   methods: {
+    ...mapActions({
+      fetchUsers: USERS
+    }),
     submit () {
       axios.post('/login', {
         name: this.name,
@@ -128,33 +78,15 @@ export default {
         this.token = data.data.token
         axios.defaults.headers.common.Authorization = `Bearer ${this.token}`
         localStorage.setItem('token', this.token)
-        axios.defaults.headers.common.accept = 'applocation/json'
-        // wsClient.connectionParams.token = this.token
-        // wsClient.tryReconnect()
-        // this.$apollo.queries.users.subscribeToMore({
-        //   document: subscribeUser,
-        //   updateQuery: (previousResult, { subscriptionData }) => {
-        //     console.log(previousResult, subscriptionData)
-        //     const user = subscriptionData.data.userAdded
-        //     return {
-        //       ...previousResult,
-        //       users: [...previousResult.users, user],
-        //     }
-        //   }
-        // })
       })
     },
     testToken () {
       axios.get('/dashboard').then(data => {
-        this.userByToken = data.data
+        this.userByToken = data.result
       })
     },
 
     updateUser () {
-      // console.log(this.$apollo)
-      this.$apollo.query({
-        query: clientsGql
-      }).then(console.log)
       this.$apollo.mutate({
         mutation: updateUserGql,
         variables: {
@@ -166,22 +98,22 @@ export default {
       })
     },
     createUser () {
-      console.log(createUserGql)
-      this.$apollo.mutate({
-        mutation: createUserGql,
+      this.$store.dispatch('query', {
+        query: `mutation createUser($user: UserInput) {
+          createUser(user: $user) { id name password }
+        }`,
         variables: {
           user: {
             name: this.newUserName,
-            password: ''
+            password: 'sdfasfsa'
           }
-        }
+        },
+        type: ADD_USER,
+        operationName: 'createUser'
       })
     },
     sendByAxios () {
       this.$store.dispatch(ME)
-      // console.log(usersGql)
-      // axios.post('/grqphql', {
-      // })
     }
   }
 }

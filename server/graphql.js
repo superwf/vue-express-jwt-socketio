@@ -28,19 +28,19 @@ export default function (app) {
   //     schema,
   //   })(...args)
   // })
-  app.use('/graphql', jwtMiddleware, graphqlHttp({
-    schema,
-    rootValue: resolvers,
-    extensions: ({ result }) => {
-      if (result.errors) {
-        // const e = new Error()
-        const e = new Error(result.errors[0].message)
-        e.status = 422
-        throw e
-      }
-    },
-    graphiql: true
-  }))
+  // app.use('/graphql', jwtMiddleware, graphqlHttp({
+  //   schema,
+  //   rootValue: resolvers,
+  //   extensions: ({ result }) => {
+  //     if (result.errors) {
+  //       // const e = new Error()
+  //       const e = new Error(result.errors[0].message)
+  //       e.status = 422
+  //       throw e
+  //     }
+  //   },
+  //   graphiql: true
+  // }))
 
   // const websocketServer = createServer(app)
   // app.use('/subscriptions', (req, res) => {

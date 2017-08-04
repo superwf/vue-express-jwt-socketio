@@ -18,16 +18,11 @@ export default {
     user ({id}) {
       return fakeData.user[id]
     },
-    users () {
-      return User.findAll()
-    },
-    clients () {
-      return fakeData.user
-    },
+  },
+  users () {
+    return User.findAll()
   },
   createUser ({ user }) {
-    // console.info(args[0])
-    // return Promise.reject(new Error('asdfasf'))
     return User.create(user).then(newUser => {
       return newUser
     })

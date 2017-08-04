@@ -5,10 +5,6 @@ import proxyMiddleware from 'http-proxy-middleware'
 import webpackConfig from '../build/webpack.dev.conf'
 import config from '../config'
 
-if (!process.env.NODE_ENV) {
-  process.env.NODE_ENV = JSON.parse(config.env.NODE_ENV)
-}
-
 export default function (app) {
   // Define HTTP proxies to your custom API backend
   // https://github.com/chimurai/http-proxy-middleware
@@ -66,4 +62,5 @@ export default function (app) {
       process.send('openBrowser')
     }
   })
+  return app
 }

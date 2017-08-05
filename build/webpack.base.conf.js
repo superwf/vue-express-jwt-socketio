@@ -1,7 +1,7 @@
-var path = require('path')
-var utils = require('./utils')
-var config = require('../config')
-var vueLoaderConfig = require('./vue-loader.conf')
+import config from '../config'
+import path from 'path'
+import utils from './utils'
+import vueLoaderConfig from './vue-loader.conf'
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -24,6 +24,7 @@ module.exports = {
       'server': resolve('server'),
       'lib': resolve('lib'),
       'store': resolve('client/store'),
+      'style': resolve('client/style'),
       'components': resolve('client/components'),
     }
   },
@@ -72,6 +73,9 @@ module.exports = {
     }, {
       test: /\.pug$/,
       loader: 'pug-loader'
+    }, {
+      test: /\.sass/,
+      loader: 'sass-loader'
     }]
   }
 }

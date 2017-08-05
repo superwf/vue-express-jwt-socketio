@@ -39,7 +39,9 @@ export default function socketIO (app) {
       })
       return socket.disconnect()
     }
-    socket.on('query', query => {
+    socket.on('query', (...args) => {
+      const [query] = args
+      console.log(args.length)
       graphql(query).then(data => {
         // 'vuex' event for vuex on client to commit the data
         socket.emit('vuex', data)

@@ -24,29 +24,31 @@ export default {
   },
   actions: {
     [ME] (context) {
-      context.rootState.socket.emit('query', {
+      context.rootGetters.socket.emit('query', {
         type: ME,
         query: meGql,
         variables: { token: localStorage.getItem('token') }
       })
     },
     [USERS] (context) {
-      context.rootState.socket.emit('query', {
+      context.rootGetters.socket.emit('query', {
         type: USERS,
         query: usersGql
       })
     },
-    [LOGOUT] ({ commit, rootState }) {
+    [LOGOUT] ({ commit, rootGetters }) {
       commit(ME, null)
       localStorage.removeItem('token')
-      rootState.socket.close()
+      rootGetters.socket.close()
     },
-    [LOGIN] ({ commit, rootState }, data) {
-      console.log(data)
+    [LOGIN] ({ commit, rootGetters, dispatch }, data) {
       return axios.post('/login', data).then(result => {
         const { token } = result.data
         localStorage.setItem('token', token)
-        rootState.socket.connect()
+        rootGetters.socket.once('connect', () => {
+          dispatch(ME)
+        })
+        rootGetters.socket.connect()
       })
     },
   }

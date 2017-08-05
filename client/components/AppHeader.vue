@@ -1,6 +1,12 @@
 <template lang="pug">
-header
-  button(v-if="me", @click="logout") Logout
+transition(
+  name="transition",
+  enter-active-class="bounceInDown",
+  leave-active-class="bounceOutUp"
+)
+  header.animated(v-if="me")
+    span welcome {{ me.name }}
+    button(@click="logout") Logout
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
@@ -23,3 +29,11 @@ export default {
   },
 }
 </script>
+<style scoped lang="sass">
+header
+  display: flex
+  justify-content: space-around
+  position: relative
+  top: 0
+  width: 100%
+</style>

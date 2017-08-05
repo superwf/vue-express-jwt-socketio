@@ -2,10 +2,10 @@ require('babel-register')({
   presets: ['es2015']
 })
 const cp = require('child_process')
-const fs = require('fs')
 const opn = require('opn')
-const config = require('../config')
+const config = require('../config').default
 const debounce = require('lodash/debounce')
+const watch = require('node-watch')
 
 const main = 'server/main.js'
 
@@ -21,8 +21,9 @@ serverProcess.once('message', () => {
 
 const log = console.log
 // 在开发模式运行，当server中的文件更改时重启服务
-fs.watch('./server', {
-  encoding: 'utf8'
+watch('./server', {
+  recursive: true,
+  encoding: 'utf8',
 }, debounce(() => {
   log('server restarting')
   try {

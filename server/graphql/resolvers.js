@@ -6,7 +6,6 @@ export default {
   me ({token}) {
     try {
       const user = jwt.verify(token, config.jwtSecret)
-      console.log(user)
       return user
     } catch (e) {
       return Promise.reject(e)

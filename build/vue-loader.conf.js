@@ -1,6 +1,6 @@
-var utils = require('./utils')
-var config = require('../config')
-var isProduction = require('../config/env').isProduction
+import config from '../config'
+import utils from './utils'
+import { isProduction } from '../config/env'
 
 module.exports = {
   loaders: utils.cssLoaders({

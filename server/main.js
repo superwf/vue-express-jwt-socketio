@@ -2,7 +2,7 @@
 require('babel-register')({
   presets: ['es2015']
 })
-const config = require('../config')
+const config = require('../config').default
 const app = require('./app').default
 const socketio = require('./socketio').default
 

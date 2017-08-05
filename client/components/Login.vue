@@ -7,17 +7,17 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
-import { isProduction } from '../../config/env'
+import { isDevelopment } from '../../config/env'
 import config from '../../config'
 import { LOGIN } from 'store/types'
 
 export default {
   name: 'login',
   data () {
-    return isProduction ? {
+    return isDevelopment ? config.defaultUser : {
       name: '',
       password: '',
-    } : config.defaultUser
+    }
   },
   methods: {
     ...mapActions({

@@ -114,6 +114,10 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "http://registry.npm.taobao.org/amdefine/download/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
+animate.css@^3.5.2:
+  version "3.5.2"
+  resolved "http://registry.npm.taobao.org/animate.css/download/animate.css-3.5.2.tgz#91e668dc069a808e5e499514867b97aae0166c36"
+
 ansi-escapes@^1.1.0:
   version "1.4.0"
   resolved "http://registry.npm.taobao.org/ansi-escapes/download/ansi-escapes-1.4.0.tgz#d3a8a83b319aa67793662b13e761c7911422306e"
@@ -5193,6 +5197,10 @@ node-sass@^4.5.3:
     request "^2.79.0"
     sass-graph "^2.1.1"
     stdout-stream "^1.4.0"
+
+node-watch@^0.5.5:
+  version "0.5.5"
+  resolved "http://registry.npm.taobao.org/node-watch/download/node-watch-0.5.5.tgz#34865ba8bc6861ab086acdcc3403e40ed55c3274"
 
 "nopt@2 || 3", nopt@3.x, nopt@~3.0.1:
   version "3.0.6"

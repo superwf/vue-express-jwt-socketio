@@ -1,26 +1,25 @@
 <template lang="pug">
 #app
+  AppHeader
   router-view
-  login-form
+  login-form(v-if="!me")
 </template>
 
 <script>
+import AppHeader from 'components/AppHeader'
 import LoginForm from 'components/Login'
-import { mapActions } from 'vuex'
-import { ME } from 'store/types'
+import { mapState } from 'vuex'
 export default {
   name: 'app',
   components: {
+    AppHeader,
     LoginForm,
   },
-  beforeMount () {
-    this.me()
-  },
-  methods: {
-    ...mapActions({
-      me: ME
+  computed: {
+    ...mapState({
+      me: state => state.user.me
     })
-  }
+  },
 }
 </script>
 

@@ -3,6 +3,7 @@ import http from 'http'
 import socketio from 'socket.io'
 import graphql from './graphql'
 import config from '../config'
+import { ERROR, NO_AUTH } from '../client/store/types'
 
 const verifyToken = token => {
   if (!token) {
@@ -32,7 +33,10 @@ export default function socketIO (app) {
   io.on('connection', socket => {
     const { token } = socket.handshake.query
     if (!verifyToken(token)) {
-      socket.emit('no-auth')
+      socket.emit('vuex', {
+        type: NO_AUTH,
+        data: null,
+      })
       return socket.disconnect()
     }
     socket.on('query', query => {
@@ -40,7 +44,10 @@ export default function socketIO (app) {
         // 'vuex' event for vuex on client to commit the data
         socket.emit('vuex', data)
       }).catch(error => {
-        socket.emit('error', error)
+        socket.emit('vuex', {
+          type: ERROR,
+          error
+        })
       })
     })
   })

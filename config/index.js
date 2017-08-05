@@ -68,4 +68,4 @@ const config = {
   },
 }
 
-module.exports = config[nodeEnv]
+export default config[nodeEnv]

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
-import { LOADING, SOCKET } from './types'
+import { LOADING, SOCKET, SOCKET_ERROR } from './types'
 import getSocket from '@/getSocket'
 
 Vue.use(Vuex)
@@ -35,15 +35,14 @@ const generateStore = async () => {
   const socket = await getSocket()
   store.commit(SOCKET, socket)
   socket.on('vuex', data => {
-    console.log(data)
-    if (data.data.errors) {
+    if (data.errors) {
       console.log(data)
     } else {
       store.commit(data.type, data.data)
     }
   })
-  socket.on('error', data => {
-    store.commit(data.type, data.data)
+  socket.on('error', err => {
+    store.commit(SOCKET_ERROR, err)
   })
   return store
 }

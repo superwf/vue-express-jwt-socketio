@@ -1,5 +1,11 @@
+export const ERROR = 'error'
+export const NO_AUTH = 'no-auth'
 export const SOCKET = 'socket'
-export const ME = 'me'
+export const SOCKET_ERROR = 'socket-error'
 export const LOADING = 'loading'
+
+export const LOGIN = 'login'
+export const LOGOUT = 'logout'
+export const ME = 'me'
 export const USERS = 'users'
 export const ADD_USER = 'add-user'

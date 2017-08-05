@@ -22,7 +22,6 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('client'),
       'server': resolve('server'),
-      'client': resolve('client'),
       'lib': resolve('lib'),
       'store': resolve('client/store'),
       'components': resolve('client/components'),
@@ -44,7 +43,7 @@ module.exports = {
     }, {
       test: /\.js$/,
       loader: 'babel-loader',
-      include: [resolve('client'), resolve('test')]
+      include: [resolve('client'), resolve('test'), resolve('config')]
     }, {
       test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
       loader: 'url-loader',

@@ -7,7 +7,7 @@ const opn = require('opn')
 const config = require('../config')
 const debounce = require('lodash/debounce')
 
-const main = 'server/main'
+const main = 'server/main.js'
 
 let serverProcess = cp.fork(main)
 

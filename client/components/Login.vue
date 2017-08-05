@@ -6,25 +6,27 @@
     button(type="submit") LOGIN
 </template>
 <script>
-import axios from 'axios'
+import { mapActions } from 'vuex'
+import { isProduction } from '../../config/env'
+import config from '../../config'
+import { LOGIN } from 'store/types'
+
 export default {
   name: 'login',
   data () {
-    return {
-      name: 'admin',
-      token: '',
-      password: 'admin',
-    }
+    return isProduction ? {
+      name: '',
+      password: '',
+    } : config.defaultUser
   },
   methods: {
+    ...mapActions({
+      login: LOGIN
+    }),
     submit () {
-      axios.post('/login', {
+      this.login({
         name: this.name,
         password: this.password
-      }).then(data => {
-        this.token = data.data.token
-        // axios.defaults.headers.common.Authorization = `Bearer ${this.token}`
-        localStorage.setItem('token', this.token)
       })
     },
   }

@@ -2,19 +2,20 @@ import Sequelize from 'sequelize'
 import { isTest, isProduction } from '../config/env'
 import config from '../config'
 
-const dbConfig = config.mysql
+const { database, username, password } = config.mysql
 
-const { database, username, password } = dbConfig
-
-const db = new Sequelize(database, username, password, {
-  logging: !isProduction,
+const param = {
   dialect: 'mysql',
   pool: {
     max: 5,
     min: 0,
     idle: 100000
   }
-})
+}
+if (isProduction) {
+  param.logging = false
+}
+const db = new Sequelize(database, username, password, param)
 
 export const dbConnectPromise = db.authenticate().then(() => {
   // when test, use MEMORY engine for speedup

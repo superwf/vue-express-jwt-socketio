@@ -12,24 +12,20 @@ const param = {
     idle: 100000
   }
 }
-if (isProduction) {
+if (isProduction || isTest) {
   param.logging = false
 }
 const db = new Sequelize(database, username, password, param)
 
 export const dbConnectPromise = db.authenticate().then(() => {
   // when test, use MEMORY engine for speedup
-  if (isTest) {
-    const syncOption = {
-      engine: 'MEMORY',
-    }
-    db.sync(syncOption)
-  } else {
-    db.sync().then(() => {
-      const User = require('./models/user').default
-      User.createDefault()
-    })
+  const syncOption = {
+    engine: isTest ? 'MEMORY' : 'INNODB',
   }
+  db.sync(syncOption).then(() => {
+    const User = require('./models/user').default
+    User.createDefault()
+  })
   // console.log('db connect success')
 }).catch(e => {
   console.info('db connect failed')

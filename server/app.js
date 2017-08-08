@@ -1,9 +1,11 @@
 import express from 'express'
 import jwt from './jwt'
-import dev from './dev'
+
+const nodeEnv = require('../config/env').env
+const envApp = require(`./${nodeEnv}`).default
 
 const app = express()
 jwt(app)
-dev(app)
+envApp(app)
 
 export default app

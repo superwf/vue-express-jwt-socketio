@@ -60,6 +60,11 @@ const generateStore = async () => {
   })
   socket.on('connect', () => {
     store.commit(CONNECTED, true)
+    const { room } = store.state
+    // when disconnect in a room, reconnect will generate a new socket.id in server, so need rejoin room
+    if (room) {
+      socket.emit('join', room)
+    }
   })
   const token = localStorage.getItem('token')
   if (token) {
@@ -85,6 +90,9 @@ const generateStore = async () => {
   })
   socket.on('disconnect', () => {
     store.commit(CONNECTED, false)
+  })
+  socket.on('reconnect_attempt', count => {
+    console.log(count)
   })
   return store
 }

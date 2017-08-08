@@ -10,6 +10,7 @@ const base = {
   assetsRoot: path.resolve(__dirname, '../dist'),
   assetsSubDirectory: 'static',
   assetsPublicPath: '/',
+  tokenExpiresIn: '1d',
   defaultUser: {
     name: 'admin',
     password: 'admin',
@@ -52,16 +53,18 @@ const config = {
     cssSourceMap: false,
     jwtSecret: 'safdasfasfdsafdasf',
     mysql: {
-      database: 'test',
+      database: 'vue_express',
       username: 'test',
       password: 'test',
     },
   },
   test: {
     ...base,
+    host: 'localhost',
+    port: 9080,
     jwtSecret: 'testsecret',
     mysql: {
-      database: 'test',
+      database: 'vue_express_test',
       username: 'test',
       password: 'test',
     },

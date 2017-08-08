@@ -12,6 +12,7 @@
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
+    "test:server:start": "NODE_ENV=test npm start",
     "test:server": "NODE_ENV=test mocha test/server/**/* --compilers es:babel-register -w -b",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },

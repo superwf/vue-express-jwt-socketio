@@ -1,12 +1,12 @@
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { ROOM } from 'store/types'
 
 export default {
   computed: {
     ...mapGetters({
-      $socket: 'socket',
-      room: 'room'
+      $socket: 'socket'
     }),
+    ...mapState(['room'])
   },
   beforeMount () {
     // use route name as room

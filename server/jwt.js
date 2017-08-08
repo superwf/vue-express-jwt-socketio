@@ -19,7 +19,7 @@ export default function jwtApp (app) {
             name: user.name,
             id: user.id,
           }, config.jwtSecret, {
-            expiresIn: '1d'
+            expiresIn: config.tokenExpiresIn
           })
           res.json({
             user: {
@@ -32,7 +32,7 @@ export default function jwtApp (app) {
           throw new Error('user name or password not correct')
         }
       }).catch(e => {
-        res.sendStatus(401)
+        res.status(401)
         res.json({
           message: e.toString()
         })

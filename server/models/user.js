@@ -62,7 +62,7 @@ const User = db.define('user', {
 
 // 根据config中的配置创建默认用户
 User.createDefault = () => {
-  return User.findOne({ where: { name: 'admin' } }).then(user => {
+  return User.findOne({ where: { name: config.defaultUser.name } }).then(user => {
     if (!user) {
       return User.create(config.defaultUser)
     }

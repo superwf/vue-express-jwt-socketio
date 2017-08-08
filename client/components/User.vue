@@ -68,9 +68,7 @@ export default {
       this.$broadcast(REMOVE_USER, { id })
     },
     connect () {
-      this.socket.open(() => {
-        console.log(1)
-      })
+      this.socket.open()
     },
     disconnect () {
       this.socket.close()

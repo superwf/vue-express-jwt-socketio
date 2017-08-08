@@ -5,6 +5,7 @@ import {
   execute,
   specifiedRules,
 } from 'graphql'
+import { ERROR } from '../../client/store/types'
 
 export default function graphqlParser (options) {
   if (!options) {
@@ -61,11 +62,22 @@ export default function graphqlParser (options) {
         data.variables,
         operationName,
       ).then(result => {
-        return {
+        debugger
+        if (result.errors) {
+          return {
+            type: ERROR,
+            errors: result.errors
+          }
+        }
+        const r = {
           type: data.type,
           // only support single query at one time
           data: Object.values(result.data)[0]
         }
+        if (data.room) {
+          r.room = data.room
+        }
+        return r
       })
     } catch (contextError) {
       return Promise.reject(contextError)

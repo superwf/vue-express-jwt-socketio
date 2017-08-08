@@ -24,10 +24,15 @@ export default {
       return newUser
     })
   },
-  updateUser (_, {user}, context) {
+  updateUser ({user}) {
     return User.findById(user.id).then(u => {
       u.name = user.name
       return u.save()
+    })
+  },
+  removeUser ({id}) {
+    return User.findById(id).then(u => {
+      return u ? u.destroy().then(() => u) : u
     })
   },
 }

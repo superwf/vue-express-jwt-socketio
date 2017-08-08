@@ -31,6 +31,7 @@ export default function socketIO (app) {
   })
 
   io.on('connection', socket => {
+    // console.log(socket.id)
     const { token } = socket.handshake.query
     if (!verifyToken(token)) {
       socket.emit('vuex', {
@@ -39,12 +40,27 @@ export default function socketIO (app) {
       })
       return socket.disconnect()
     }
+    socket.on('join', room => {
+      socket.join(room)
+    })
+    socket.on('leave', room => {
+      socket.leave(room)
+    })
     socket.on('query', (...args) => {
       const [query] = args
-      console.log(args.length)
+      let callback = args[args.length - 1]
+      callback = typeof callback === 'function' ? callback : false
       graphql(query).then(data => {
-        // 'vuex' event for vuex on client to commit the data
-        socket.emit('vuex', data)
+        if (callback) {
+          callback(data)
+        } else {
+          // 'vuex' event for vuex on client to commit the data
+          socket.emit('vuex', data)
+        }
+        // if has rooms, broadcast to every room
+        if (data.room) {
+          socket.to(data.room).emit('vuex', data)
+        }
       }).catch(error => {
         socket.emit('vuex', {
           type: ERROR,

@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-import { ME, ADD_USER, USERS } from 'store/types'
+import { mapState, mapActions, mapGetters } from 'vuex'
+import { CREATE_USER, USERS, UPDATE_USER } from 'store/types'
 
 export default {
   name: 'hello',
@@ -43,39 +43,37 @@ export default {
   },
   computed: {
     ...mapState({
-      me (state) {
-        return state.user.me
-      },
       users (state) {
         return state.user.users
       }
-    })
+    }),
+    ...mapGetters(['socket'])
   },
   beforeMount () {
+    this.socket.emit('join', 'user')
+    // this.socket.join('user')
     this.fetchUsers()
+  },
+  beforeDestroy () {
+    // this.socket.leave('user')
   },
   methods: {
     ...mapActions({
-      fetchUsers: USERS
+      fetchUsers: USERS,
     }),
     createUser () {
-      this.$store.dispatch('query', {
-        query: `mutation createUser($user: UserInput) {
-          createUser(user: $user) { id name password }
-        }`,
-        variables: {
-          user: {
-            name: this.newUserName,
-            password: 'sdfasfsa'
-          }
-        },
-        type: ADD_USER,
-        operationName: 'createUser'
+      this.$store.dispatch(CREATE_USER, {
+        name: this.newUserName,
+        password: 'sdfasfsa'
       })
     },
-    sendByAxios () {
-      this.$store.dispatch(ME)
-    }
+    updateUser () {
+      this.$store.dispatch(UPDATE_USER, {
+        id: 1,
+        name: this.newUserName,
+        password: 'admin'
+      })
+    },
   }
 }
 </script>

@@ -16,6 +16,11 @@ export const cryptPassword = password => {
 }
 
 const User = db.define('user', {
+  id: {
+    type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV1,
+    primaryKey: true
+  },
   name: {
     type: Sequelize.STRING,
     allowNull: false,

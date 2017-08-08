@@ -59,7 +59,7 @@ export default function (app) {
     console.log('Listening at ' + uri + '\n')
     // when env is test, don't need open it
     if (config.autoOpenBrowser) {
-      process.send('openBrowser')
+      process.send && process.send('openBrowser')
     }
   })
   return app

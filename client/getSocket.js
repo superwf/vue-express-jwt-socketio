@@ -3,30 +3,33 @@ import io from 'socket.io-client'
 // singlton socket instance
 let socket = null
 
-async function getSocket () {
+function getSocket () {
   if (socket) {
-    return Promise.resolve(socket)
+    return socket
   }
-  return new Promise((resolve, reject) => {
-    const token = localStorage.getItem('token')
-    socket = io({
-      path: '/graphql',
-      transports: ['websocket', 'polling'],
-      query: {
-        token,
+  const token = localStorage.getItem('token')
+  socket = io({
+    path: '/graphql',
+    reconnection: true,
+    autoConnect: !!token,
+    reconnectionDelay: 5000,
+    // reconnectionFactor: 5000,
+    transports: ['websocket', 'polling'],
+    query: {
+      token,
+    },
+    transportOptions: {
+      polling: {
+        Authorization: `Bearer ${token}`,
       },
-      transportOptions: {
-        polling: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    })
-    socket.on('connect', () => {
-      resolve(socket)
-    })
-    socket.on('connect_error', err => {
-      reject(err)
-    })
+    },
   })
+  socket.on('reconnect_attempt', () => {
+    const token = localStorage.getItem('token')
+    socket.io.opts.query = {
+      token
+    }
+  })
+  return socket
 }
 export default getSocket

@@ -1,12 +1,17 @@
 <template lang="pug">
-.login
-  form(tabindex="1", @submit.prevent="submit")
-    input(name="name", v-model="name")
-    input(name="password", type="password", v-model="password")
-    button(type="submit") LOGIN
+transition(
+  name="transition",
+  enter-active-class="rollIn",
+  leave-active-class="rollOut"
+)
+  .login.animated(v-if="!token")
+    form(tabindex="1", @submit.prevent="submit")
+      input(name="name", v-model="name")
+      input(name="password", type="password", v-model="password")
+      button(type="submit") LOGIN
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { isDevelopment } from '../../config/env'
 import config from '../../config'
 import { LOGIN } from 'store/types'
@@ -18,6 +23,14 @@ export default {
       name: '',
       password: '',
     }
+  },
+  computed: {
+    ...mapState({
+      me: state => state.user.me,
+      token: state => state.user.token,
+      initialized: state => state.initialized,
+      connected: state => state.connected,
+    }),
   },
   methods: {
     ...mapActions({
@@ -34,6 +47,7 @@ export default {
 </script>
 <style lang="sass" scoped>
 .login, form
+  margin-top: 40px
   display: flex
   justify-content: center
 form

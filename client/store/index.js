@@ -1,16 +1,23 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
-import { LOADING, SOCKET_ERROR } from './types'
+import { ROOM, TOKEN, LOADING, SOCKET_ERROR, CONNECTED, ERRORS, INITIALIZED, NO_AUTH } from './types'
 import getSocket from '@/getSocket'
 
 Vue.use(Vuex)
 
 const generateStore = async () => {
-  const socket = await getSocket()
+  const socket = getSocket()
 
   const store = new Vuex.Store({
     state: {
+      // init是最初的状态，当第一次socket成功或失败时变为false
+      // 为了防止页面初始化时的登录和连接模块的显示
+      initialized: false,
+      connected: false,
+      room: null,
+      socketError: null,
+      errors: [],
       loading: 0,
     },
     mutations: {
@@ -21,6 +28,28 @@ const generateStore = async () => {
           state.loading -= 1
         }
       },
+      [CONNECTED] (state, connected) {
+        state.connected = connected
+      },
+      [ROOM] (state, room) {
+        state.room = room
+      },
+      [ERRORS] (state, errors) {
+        state.errors = errors
+      },
+      [INITIALIZED] (state, data) {
+        if (data === false) {
+          state.initialized = false
+        } else {
+          state.initialized = true
+        }
+      },
+      [SOCKET_ERROR] (state, error) {
+        state.socketError = error
+      },
+      [NO_AUTH] (state) {
+        state.initialized = true
+      },
     },
     getters: {
       socket: () => socket
@@ -29,19 +58,33 @@ const generateStore = async () => {
       user
     },
   })
-
-  // store.__proto__.xxxx = 'xxxx'
+  socket.on('connect', () => {
+    store.commit(CONNECTED, true)
+  })
+  const token = localStorage.getItem('token')
+  if (token) {
+    store.commit(TOKEN, token)
+  }
 
   // bind all 'commit' event from socket
   socket.on('vuex', data => {
     if (data.errors) {
-      console.log(data)
+      store.commit(ERRORS, data.errors)
     } else {
       store.commit(data.type, data.data)
     }
   })
   socket.on('error', err => {
     store.commit(SOCKET_ERROR, err)
+    store.commit(CONNECTED, false)
+  })
+  socket.on('connect_error', err => {
+    store.commit(INITIALIZED)
+    store.commit(SOCKET_ERROR, err)
+    store.commit(CONNECTED, false)
+  })
+  socket.on('disconnect', () => {
+    store.commit(CONNECTED, false)
   })
   return store
 }

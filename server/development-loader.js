@@ -20,7 +20,7 @@ serverProcess.once('message', () => {
 })
 
 const log = console.log
-// 在开发模式运行，当server中的文件更改时重启服务
+// watch server file modify and restart server
 watch('./server', {
   recursive: true,
   encoding: 'utf8',

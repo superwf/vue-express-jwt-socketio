@@ -17,7 +17,7 @@ export default {
     })
   },
   users () {
-    return User.findAll()
+    return User.findAll({ order: 'createdAt DESC' })
   },
   createUser ({ user }) {
     return User.create(user).then(newUser => {

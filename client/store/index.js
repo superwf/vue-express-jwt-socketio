@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
-import { ROOM, TOKEN, LOADING, SOCKET_ERROR, CONNECTED, ERRORS, INITIALIZED, NO_AUTH } from './types'
+import { ROOM, CURRENT_ROOM, TOKEN, LOADING, SOCKET_ERROR, CONNECTED, ERRORS, INITIALIZED, NO_AUTH } from './types'
 import getSocket from '@/getSocket'
 
 Vue.use(Vuex)
@@ -15,7 +15,13 @@ const generateStore = async () => {
       // 为了防止页面初始化时的登录和连接模块的显示
       initialized: false,
       connected: false,
+      // room is the router name
+      // currentRoom is current joined room,
+      // because every component mountd, the socket will join the room,
+      // currentRoom is to prevent client join one room
+      // more than one time
       room: null,
+      currentRoom: null,
       socketError: null,
       errors: [],
       loading: 0,
@@ -33,6 +39,9 @@ const generateStore = async () => {
       },
       [ROOM] (state, room) {
         state.room = room
+      },
+      [CURRENT_ROOM] (state, room) {
+        state.currentRoom = room
       },
       [ERRORS] (state, errors) {
         state.errors = errors

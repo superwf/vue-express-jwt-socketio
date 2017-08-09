@@ -9,5 +9,11 @@ testsContext.keys().forEach(testsContext)
 // require all src files except main.js for coverage.
 // you can also change this to match only the subset of files that
 // you want coverage for.
-const srcContext = require.context('../../src', true, /^\.\/(?!main(\.js)?$)/)
+// https://webpack.js.org/guides/dependency-management/#require-context
+const srcContext = require.context(
+  '../../client',
+  true,
+  /^\.\/(components|utils|mixins).\/.+\.(vue|js)$/
+)
+// console.log(srcContext.keys())
 srcContext.keys().forEach(srcContext)

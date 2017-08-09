@@ -9,6 +9,7 @@ export const ERRORS = 'errors'
 export const LOADING = 'loading'
 export const CONNECTED = 'connected'
 export const ROOM = 'room'
+export const CURRENT_ROOM = 'current-room'
 
 export const LOGIN = 'login'
 export const LOGOUT = 'logout'

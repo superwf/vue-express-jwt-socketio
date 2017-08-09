@@ -1,5 +1,9 @@
 <template lang="pug">
 .users
+  form(@submit.prevent="submit")
+    input(v-model="name")
+    // button(@click="isCreate = false") update user1 name
+    button(@click="isCreate = true") create user
   table
     transition-group(
       name="transition",
@@ -13,13 +17,6 @@
         td name: {{ user.name }}
         td
           button(@click="remove(user.id)") REMOVE
-  form(@submit.prevent="submit")
-    input(v-model="name")
-    button(@click="isCreate = false") update user1 name
-    button(@click="isCreate = true") create user
-  .socket
-    button(@click="connect") connect
-    button(@click="disconnect") disconnect
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
@@ -67,22 +64,20 @@ export default {
     remove (id) {
       this.$broadcast(REMOVE_USER, { id })
     },
-    connect () {
-      this.socket.open()
-    },
-    disconnect () {
-      this.socket.close()
-    },
   }
 }
 </script>
 <style lang="sass">
+table, .users
+  margin-top: 20px
 .users
   display: flex
   flex-wrap: wrap
   justify-content: center
   form
     flex-basis: 100%
+td
+  padding-bottom: 20px
 li
   cursor: pointer
 </style>

@@ -20,7 +20,7 @@ export default {
       state.users = payload
     },
     [CREATE_USER] (state, payload) {
-      state.users = [...state.users, payload]
+      state.users = [payload, ...state.users]
     },
     [REMOVE_USER] (state, payload) {
       const index = findIndex(state.users, { id: payload.id })

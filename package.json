@@ -9,7 +9,7 @@
     "start:debug": "node debug server/main.js",
     "start": "node server/development-loader.js",
     "build": "node build/build.js",
-    "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
+    "unit": "cross-env NODE_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "NODE_ENV=test node server/e2e-loader.js",
     "test": "npm run unit && npm run e2e",
     "test:server:start": "NODE_ENV=test npm start",

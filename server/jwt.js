@@ -14,7 +14,7 @@ export default function jwtApp (app) {
     function (req, res) {
       const { name, password } = req.body
       User.findOne({ where: { name } }).then(user => {
-        if (user.password === cryptPassword(password)) {
+        if (user && user.password === cryptPassword(password)) {
           const token = jsonwebtoken.sign({
             name: user.name,
             id: user.id,

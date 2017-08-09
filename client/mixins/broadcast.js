@@ -6,7 +6,7 @@ export default {
     ...mapGetters({
       $socket: 'socket'
     }),
-    ...mapState(['room'])
+    ...mapState(['room', 'currentRoom'])
   },
   beforeMount () {
     // use route name as room
@@ -18,13 +18,13 @@ export default {
     }
   },
   mounted () {
-    if (this.room) {
-      this.socket.emit('join', this.room)
+    if (this.room && !this.currentRoom) {
+      this.$socket.emit('join', this.room)
     }
   },
   beforeDestroy () {
-    if (this.room) {
-      this.socket.emit('leave', this.room)
+    if (this.room && this.currentRoom) {
+      this.$socket.emit('leave', this.room)
     }
   },
   methods: {

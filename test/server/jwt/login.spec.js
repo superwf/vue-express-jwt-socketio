@@ -23,6 +23,7 @@ describe.only('test login', () => {
 
   it('login with right user and get user and token', done => {
     axios.post(host, config.defaultUser).then(result => {
+      expect(result.status).toBe(200)
       expect(result.data.user.name).toBe(config.defaultUser.name)
       expect(typeof result.data.token).toBe('string')
       done()

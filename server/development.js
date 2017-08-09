@@ -2,7 +2,7 @@ import express from 'express'
 import path from 'path'
 import webpack from 'webpack'
 import proxyMiddleware from 'http-proxy-middleware'
-import webpackConfig from '../build/webpack.dev.conf'
+import webpackConfig from '../build/webpack.development.conf'
 import config from '../config'
 
 export default function (app) {
@@ -49,15 +49,14 @@ export default function (app) {
   app.use(hotMiddleware)
 
   // serve pure static assets
-  var staticPath = path.posix.join(config.assetsPublicPath, config.assetsSubDirectory)
+  const staticPath = path.posix.join(config.assetsPublicPath, config.assetsSubDirectory)
   app.use(staticPath, express.static('./static'))
 
-  var uri = `http://${config.host}:${config.port}`
+  const uri = `http://${config.host}:${config.port}`
 
   console.log('Starting dev server...')
   devMiddleware.waitUntilValid(() => {
     console.log('Listening at ' + uri + '\n')
-    // when env is test, don't need open it
     if (config.autoOpenBrowser) {
       process.send && process.send('openBrowser')
     }

@@ -10,6 +10,13 @@ const { port, host } = config
 
 const server = socketio(app)
 
-server.listen(port, () => {
-  console.log(`websocket listen at ${host}:${port}`)
+const ready = new Promise(resolve => {
+  server.listen(port, () => {
+    console.log(`websocket listen at ${host}:${port}`)
+    resolve()
+  })
 })
+module.exports = {
+  server,
+  ready
+}

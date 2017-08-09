@@ -4,7 +4,7 @@ transition(
   enter-active-class="bounceInDown",
   leave-active-class="bounceOutUp"
 )
-  header.animated(v-if="me")
+  header.app-header.animated(v-if="me")
     span welcome {{ me.name }}
     button(@click="logout") Logout
 </template>

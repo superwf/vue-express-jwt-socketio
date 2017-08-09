@@ -1,7 +1,6 @@
 // For authoring Nightwatch tests, see
 // http://nightwatchjs.org/guide#usage
 const { defaultUser } = require('../../../config').default
-const expect = require('expect')
 
 module.exports = {
   'login progress': function (browser) {
@@ -20,6 +19,8 @@ module.exports = {
       .waitForElementVisible('.app-header', 5000)
       .assert.containsText('.app-header', defaultUser.name)
       .assert.containsText('.app-header button', 'Logout')
+      .click('.app-header button')
+      .waitForElementVisible('.login', 5000)
       .end()
   }
 }

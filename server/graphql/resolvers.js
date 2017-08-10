@@ -17,7 +17,7 @@ export default {
     })
   },
   users () {
-    return User.findAll({ order: 'createdAt DESC' })
+    return User.findAll({ order: [['createdAt', 'DESC']] })
   },
   createUser ({ user }) {
     return User.create(user).then(newUser => {
@@ -27,6 +27,9 @@ export default {
   updateUser ({user}) {
     return User.findById(user.id).then(u => {
       u.name = user.name
+      if (user.password) {
+        u.password = u.password
+      }
       return u.save()
     })
   },

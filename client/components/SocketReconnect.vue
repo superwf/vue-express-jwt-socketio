@@ -6,9 +6,9 @@ transition(
 )
   .socket-reconnect.animated(v-if="token && initialized && !connected")
     .content
-      p 您服务器连接已断开，无法进行操作
+      p 服务器连接已断开，无法进行操作，正在进行重试连接请稍等
       p(v-if="socketError") 您的服务器连接错误，请稍后再试
-      button(@click="connect") 重新连接
+      button(@click="connect") 手动重新连接
     .mask
 </template>
 <script>

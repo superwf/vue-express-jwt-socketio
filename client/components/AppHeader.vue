@@ -6,6 +6,8 @@ transition(
 )
   header.app-header.animated(v-if="me")
     span welcome {{ me.name }}
+    nav
+      router-link(to="/user") User
     button(@click="logout") Logout
 </template>
 <script>

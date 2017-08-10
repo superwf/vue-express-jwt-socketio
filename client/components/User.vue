@@ -1,10 +1,10 @@
 <template lang="pug">
 .users
-  form(@submit.prevent="submit")
-    input(v-model="name")
-    // button(@click="isCreate = false") update user1 name
-    button(@click="isCreate = true") create user
-  table
+  loading-form(:submit="create")
+    input(v-model="name", placeholder="name")
+    input(v-model="password", placeholder="password")
+    loading-button create user
+  ul
     transition-group(
       name="transition",
       appear-active-class="fadeInDown",
@@ -12,24 +12,36 @@
       leave-active-class="fadeOutUp",
       tag="tbody"
     )
-      tr.animated(v-for="user in users", :key="user.id")
-        td id: {{ user.id }}
-        td name: {{ user.name }}
-        td
-          button(@click="remove(user.id)") REMOVE
+      li.animated(v-for="user in users", :key="user.id")
+        loading-form(:submit="update(user.id)")
+          label
+            | name
+            input(v-once, :value="user.name", :ref="`name${user.id}`")
+          label
+            | password
+            input(:ref="`password${user.id}`")
+          .actions
+            loading-button UPDATE
+            button(@click.prevent="remove(user.id)") REMOVE
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { CREATE_USER, USERS, UPDATE_USER, REMOVE_USER } from 'store/types'
 import broadcast from 'mixins/broadcast'
+import LoadingButton from 'components/LoadingButton'
+import LoadingForm from 'components/LoadingForm'
 
 export default {
   name: 'users',
+  components: {
+    LoadingButton,
+    LoadingForm,
+  },
   mixins: [broadcast],
   data () {
     return {
       name: '',
-      isCreate: false,
+      password: '',
     }
   },
   computed: {
@@ -40,25 +52,30 @@ export default {
     }),
     ...mapGetters(['socket']),
   },
-  beforeMount () {
-    this.fetchUsers()
-  },
   methods: {
+    fetch () {
+      this.fetchUsers()
+    },
     ...mapActions({
       fetchUsers: USERS,
     }),
-    submit () {
-      if (this.isCreate) {
-        this.$broadcast(CREATE_USER, {user: {
-          name: this.name,
-          password: 'defaultpassword'
-        }})
-      } else {
-        this.$broadcast(UPDATE_USER, {
-          id: 1,
-          name: this.name,
-          password: 'admin'
-        })
+    create () {
+      return this.$broadcast(CREATE_USER, {user: {
+        name: this.name,
+        password: this.password
+      }})
+    },
+    update (id) {
+      return () => {
+        const user = {
+          id,
+          name: this.$refs[`name${id}`][0].value,
+        }
+        const password = this.$refs[`password${id}`][0].value
+        if (password) {
+          user.password = password
+        }
+        return this.$broadcast(UPDATE_USER, { user })
       }
     },
     remove (id) {
@@ -76,8 +93,8 @@ table, .users
   justify-content: center
   form
     flex-basis: 100%
-td
-  padding-bottom: 20px
 li
-  cursor: pointer
+  padding-bottom: 20px
+.actions
+  display: inline-block
 </style>

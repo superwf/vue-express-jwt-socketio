@@ -15,9 +15,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'app-errors',
   computed: {
-    ...mapState({
-      errors: state => state.errors
-    }),
+    ...mapState(['errors'])
   },
   data () {
     return {
@@ -31,11 +29,17 @@ export default {
     errors (val) {
       if (val.length > 0) {
         this.show = true
+        window.addEventListener('keydown', this.hide)
+      } else {
+        window.removeEventListener('keydown', this.hide)
       }
     }
   },
   methods: {
-    hide () {
+    hide (e) {
+      if (e && e.keyCode && e.keyCode !== 27) { // ESC
+        return
+      }
       this.show = false
     }
   }
@@ -44,6 +48,7 @@ export default {
 <style lang="sass" scoped>
 .errors
   position: absolute
+  animation-duration: .3s
   top: 20px
   right: 10px
   width: auto

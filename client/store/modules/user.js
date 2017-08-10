@@ -1,5 +1,5 @@
 import { ME, USERS, CREATE_USER, UPDATE_USER, TOKEN,
-  LOGOUT, LOGIN, NO_AUTH, REMOVE_USER, INITIALIZED } from 'store/types'
+  LOGOUT, LOGIN, NO_AUTH, REMOVE_USER, INITIALIZED, ERRORS } from 'store/types'
 import meGql from '../../gql/me.gql'
 import usersGql from '../../gql/users.gql'
 import createUserGql from '../../gql/createUser.gql'
@@ -57,14 +57,10 @@ export default {
         commit(INITIALIZED)
       })
     },
-    [UPDATE_USER] (context, user, room) {
-      return context.rootGetters.socket.emit('query', {
-        type: UPDATE_USER,
-        query: updateUserGql,
-        room,
-        variables: { user },
-      })
-    },
+    [UPDATE_USER]: emit({
+      type: UPDATE_USER,
+      query: updateUserGql
+    }),
     [CREATE_USER]: emit({
       type: CREATE_USER,
       query: createUserGql
@@ -101,6 +97,12 @@ export default {
           dispatch(ME)
         })
         socket.connect()
+      }).catch(e => {
+        if (e.response && e.response.status === 401) {
+          commit(ERRORS, [{
+            message: '用户名或密码错误'
+          }])
+        }
       })
     },
   }

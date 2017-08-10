@@ -19,7 +19,7 @@ type Query {
 input UserInput {
   id: String
   name: String!
-  password: String!
+  password: String
 }
 
 type Subscription {

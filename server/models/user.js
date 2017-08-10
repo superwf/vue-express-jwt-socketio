@@ -24,6 +24,7 @@ const User = db.define('user', {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
+    unique: true,
     defaultValue: '',
     validate: {
       isLength: {
@@ -31,6 +32,14 @@ const User = db.define('user', {
         max: 50,
         msg: errorMessage.user.name,
       },
+      isUnique (name, next) {
+        this.isNewRecord && User.findOne({ where: { name } }).then(user => {
+          if (user) {
+            return next('用户名不能重复')
+          }
+          next()
+        })
+      }
     },
   },
   password: {

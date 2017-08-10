@@ -25,6 +25,7 @@ module.exports = {
       'lib': resolve('lib'),
       'store': resolve('client/store'),
       'mixins': resolve('client/mixins'),
+      'utils': resolve('client/utils'),
       'style': resolve('client/style'),
       'components': resolve('client/components'),
     }

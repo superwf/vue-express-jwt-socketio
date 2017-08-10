@@ -5050,7 +5050,7 @@ named-placeholders@1.1.1:
   dependencies:
     lru-cache "2.5.0"
 
-nan@^2.3.0, nan@^2.3.2:
+nan@^2.3.0, nan@^2.3.2, nan@~2.6.2:
   version "2.6.2"
   resolved "http://registry.npm.taobao.org/nan/download/nan-2.6.2.tgz#e4ff34e6c95fdfb5aecc08de6596f43605a7db45"
 
@@ -5157,7 +5157,7 @@ node-libs-browser@^2.0.0:
     util "^0.10.3"
     vm-browserify "0.0.4"
 
-node-pre-gyp@^0.6.36:
+node-pre-gyp@^0.6.36, node-pre-gyp@~0.6.36:
   version "0.6.36"
   resolved "http://registry.npm.taobao.org/node-pre-gyp/download/node-pre-gyp-0.6.36.tgz#db604112cb74e0d477554e9b505b17abddfab786"
   dependencies:
@@ -6719,6 +6719,12 @@ sequelize-cli@^2.7.0:
     umzug "^1.11.0"
     yargs "^7.0.1"
 
+sequelize-isunique-validator@^1.1.1:
+  version "1.1.1"
+  resolved "http://registry.npm.taobao.org/sequelize-isunique-validator/download/sequelize-isunique-validator-1.1.1.tgz#6fc3b78d3577ab63a78d97cdfcb504b29c940b04"
+  dependencies:
+    sqlite3 "^3.1.0"
+
 sequelize@^4.4.2:
   version "4.4.2"
   resolved "http://registry.npm.taobao.org/sequelize/download/sequelize-4.4.2.tgz#95292e0a752e2586ec92a0e72362b76e4fcb8eae"
@@ -7015,6 +7021,13 @@ spdx-license-ids@^1.0.2:
 sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "http://registry.npm.taobao.org/sprintf-js/download/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
+
+sqlite3@^3.1.0:
+  version "3.1.9"
+  resolved "http://registry.npm.taobao.org/sqlite3/download/sqlite3-3.1.9.tgz#b2e7fbaa348380318d3834323918c3c351b8bf18"
+  dependencies:
+    nan "~2.6.2"
+    node-pre-gyp "~0.6.36"
 
 sqlstring@^2.2.0:
   version "2.2.0"

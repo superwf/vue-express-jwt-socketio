@@ -62,9 +62,9 @@ export default function graphqlParser (options) {
         data.variables,
         operationName,
       ).then(result => {
-        debugger
         if (result.errors) {
           return {
+            vuexType: data.type,
             type: ERROR,
             errors: result.errors
           }

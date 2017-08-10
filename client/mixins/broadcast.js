@@ -16,6 +16,9 @@ export default {
     } else {
       this.$store.commit(ROOM, null)
     }
+    if (this.fetch) {
+      this.fetch()
+    }
   },
   mounted () {
     if (this.room && !this.currentRoom) {
@@ -31,7 +34,7 @@ export default {
     // broadcast only in room
     $broadcast (...args) {
       args.push(this.room)
-      this.$store.dispatch(...args)
+      return this.$store.dispatch(...args)
     }
   }
 }

@@ -1,8 +1,17 @@
 import config from '../../../config'
 import expect from 'expect'
 import axios from 'axios'
+import { server, ready } from '../../../server/main'
 
-describe.only('test login', () => {
+describe('test login', () => {
+  before(done => {
+    ready.then(done)
+  })
+
+  after(() => {
+    server.close()
+  })
+
   const host = `http://${config.host}:${config.port}/login`
   it('login with wrong params', done => {
     axios.post(host, {}).catch(e => {

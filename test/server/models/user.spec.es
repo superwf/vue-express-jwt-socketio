@@ -66,7 +66,7 @@ describe('model user', () => {
   it('update', done => {
     const password = 'sadfsda'
     User.create({
-      name: 'wfwf',
+      name: 'updateUser',
       password,
     }).then(user => {
       user.name = 'xxxx'

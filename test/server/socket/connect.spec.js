@@ -5,8 +5,16 @@ import path from 'path'
 import fs from 'fs'
 import expect from 'expect'
 import axios from 'axios'
+import { server, ready } from '../../../server/main'
 
 describe('connect', () => {
+  before(done => {
+    ready.then(done)
+  })
+
+  after(() => {
+    server.close()
+  })
   it('connect without token', done => {
     const socket = io(`http://${config.host}:${config.port}`, {
       path: '/graphql',

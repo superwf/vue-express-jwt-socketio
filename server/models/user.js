@@ -3,6 +3,9 @@ import db from '../db'
 import crypto from 'crypto'
 import errorMessage from '../../lib/errorMessage'
 import config from '../../config'
+import { isUnique } from './validators'
+
+const tableName = 'user'
 
 // 加密密码方法，若更换则之前添加的用户密码均不可验证
 // 更换之后的用户密码可验证正常
@@ -15,7 +18,7 @@ export const cryptPassword = password => {
   return crypto.createHash(cryptType).update(password).digest('base64')
 }
 
-const User = db.define('user', {
+const User = db.define(tableName, {
   id: {
     type: Sequelize.UUID,
     defaultValue: Sequelize.UUIDV1,
@@ -30,16 +33,9 @@ const User = db.define('user', {
       isLength: {
         min: 1,
         max: 50,
-        msg: errorMessage.user.name,
+        msg: errorMessage.user.name.length,
       },
-      isUnique (name, next) {
-        this.isNewRecord && User.findOne({ where: { name } }).then(user => {
-          if (user) {
-            return next('用户名不能重复')
-          }
-          next()
-        })
-      }
+      isUnique: isUnique(tableName, 'name'),
     },
   },
   password: {
@@ -50,7 +46,7 @@ const User = db.define('user', {
       isLength: {
         min: 1,
         max: 50,
-        msg: errorMessage.user.password,
+        msg: errorMessage.user.password.length,
       },
     },
   },

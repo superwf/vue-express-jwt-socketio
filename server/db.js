@@ -12,7 +12,7 @@ const param = {
     idle: 100000
   }
 }
-if (isProduction || isTest) {
+if (isProduction) {
   param.logging = false
 }
 const db = new Sequelize(database, username, password, param)

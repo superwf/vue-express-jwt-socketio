@@ -16,7 +16,8 @@ import { ME, LOGOUT } from 'store/types'
 export default {
   name: 'app-header',
   beforeMount () {
-    this.fetchMe()
+    const token = localStorage.getItem('token')
+    this.fetchMe(token)
   },
   computed: {
     ...mapState({

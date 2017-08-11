@@ -29,7 +29,7 @@ export default {
               button.loading = false
             })
           })
-        }, 1000)
+        }, 2000)
       }
     }
   }

@@ -4,25 +4,23 @@
     input(v-model="name", placeholder="name")
     input(v-model="password", placeholder="password")
     loading-button create user
-  ul
-    transition-group(
-      name="transition",
-      appear-active-class="fadeInDown",
-      enter-active-class="fadeInDown",
-      leave-active-class="fadeOutUp",
-      tag="tbody"
-    )
-      li.animated(v-for="user in users", :key="user.id")
-        loading-form(:submit="update(user.id)")
-          label
-            | name
-            input(v-once, :value="user.name", :ref="`name${user.id}`")
-          label
-            | password
-            input(:ref="`password${user.id}`")
-          .actions
-            loading-button UPDATE
-            button(@click.prevent="remove(user.id)") REMOVE
+  transition-group(
+    name="transition",
+    appear-active-class="fadeInDown",
+    enter-active-class="fadeInDown",
+    tag="ul"
+  )
+    li(v-for="user in users", :key="user.id")
+      loading-form(:submit="update(user.id)")
+        label
+          | name
+          input(v-once, :value="user.name", :ref="`name${user.id}`")
+        label
+          | password
+          input(:ref="`password${user.id}`")
+        .actions
+          loading-button UPDATE
+          button(@click.prevent="remove(user.id)") REMOVE
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
@@ -60,10 +58,10 @@ export default {
       fetchUsers: USERS,
     }),
     create () {
-      return this.$broadcast(CREATE_USER, {user: {
+      return this.$broadcast(CREATE_USER, {
         name: this.name,
         password: this.password
-      }})
+      })
     },
     update (id) {
       return () => {
@@ -75,11 +73,11 @@ export default {
         if (password) {
           user.password = password
         }
-        return this.$broadcast(UPDATE_USER, { user })
+        return this.$broadcast(UPDATE_USER, user)
       }
     },
     remove (id) {
-      this.$broadcast(REMOVE_USER, { id })
+      return this.$broadcast(REMOVE_USER, id)
     },
   }
 }
@@ -97,4 +95,11 @@ li
   padding-bottom: 20px
 .actions
   display: inline-block
+.transition-move
+  transition: transform 1s
+.transition-enter, .transition-leave-to
+  transform: translateY(-30px)
+  opacity: 0
+.transition-leave-active
+  position: absolute
 </style>

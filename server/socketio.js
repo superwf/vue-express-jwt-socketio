@@ -1,11 +1,13 @@
 import jwt from 'jsonwebtoken'
 import http from 'http'
 import socketio from 'socket.io'
-import graphql from './graphql'
 import config from '../config'
-import { ERROR, NO_AUTH } from '../client/store/types'
+import { ERRORS, NO_AUTH } from '../client/store/types'
+import models from './models'
+import castArray from 'lodash/castArray'
 
-const verifyToken = token => {
+// verify token, and attach user to socket
+const verifyToken = (token, socket) => {
   if (!token) {
     return false
   }
@@ -14,16 +16,54 @@ const verifyToken = token => {
     if (user.exp * 1000 < Date.now()) {
       return false
     }
+    socket.user = user
   } catch (e) {
     return false
   }
   return true
 }
 
+const checkAuthenticate = (user, req) => {
+  if (user && req) {
+    return Promise.resolve(true)
+  }
+  return Promise.reject(false)
+}
+
+// todo, need validate model, action and variables
+// todo, validate user auth
+const callModelAction = (req, socket) => {
+  console.log(req)
+  const { model, action, type } = req
+  const variables = req.variables ? castArray(req.variables) : []
+  if (!model || !action) {
+    return Promise.reject(`${model} or ${action} not exist on server`)
+  }
+  const { user } = socket
+  return checkAuthenticate(user, req).then(ok => {
+    if (ok) {
+      const promise = variables.length > 0
+        ? models[model][action](...variables)
+        : models[model][action]()
+      return promise.then(data => {
+        return {
+          type,
+          data
+        }
+      })
+    } else {
+      return {
+        type: ERRORS,
+        data: 'NO AUTHENTICATION'
+      }
+    }
+  })
+}
+
 export default function socketIO (app) {
   const server = http.Server(app)
   const io = socketio(server, {
-    path: '/graphql',
+    path: config.socketPath,
     transports: [
       'websocket',
       'polling'
@@ -31,9 +71,8 @@ export default function socketIO (app) {
   })
 
   io.on('connection', socket => {
-    // console.log(socket.id)
     const { token } = socket.handshake.query
-    if (!verifyToken(token)) {
+    if (!verifyToken(token, socket)) {
       socket.emit('vuex', {
         type: NO_AUTH,
         data: null,
@@ -46,11 +85,13 @@ export default function socketIO (app) {
     socket.on('leave', room => {
       socket.leave(room)
     })
-    socket.on('query', (...args) => {
-      const [query] = args
+    socket.on('call', (...args) => {
+      const [req] = args
       let callback = args[args.length - 1]
       callback = typeof callback === 'function' ? callback : false
-      graphql(query).then(data => {
+
+      callModelAction(req, socket).then(data => {
+        // console.log(callback, data)
         if (callback) {
           callback(data)
         } else {
@@ -58,14 +99,17 @@ export default function socketIO (app) {
           socket.emit('vuex', data)
         }
         // if has rooms, broadcast to every room
-        if (data.room) {
-          socket.to(data.room).emit('vuex', data)
+        if (req.room) {
+          socket.to(req.room).emit('vuex', data)
         }
-      }).catch(error => {
-        socket.emit('vuex', {
-          type: ERROR,
-          error
-        })
+      }).catch(errors => {
+        // console.log(errors)
+        if (callback) {
+          callback({
+            type: ERRORS,
+            errors: errors.errors ? errors.errors : errors
+          })
+        }
       })
     })
   })

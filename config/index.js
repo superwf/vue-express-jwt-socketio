@@ -11,6 +11,7 @@ const base = {
   assetsSubDirectory: 'static',
   assetsPublicPath: '/',
   tokenExpiresIn: '1d',
+  socketPath: '/socket',
   defaultUser: {
     name: 'admin',
     password: 'admin',

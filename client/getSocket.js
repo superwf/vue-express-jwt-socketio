@@ -1,4 +1,5 @@
 import io from 'socket.io-client'
+import config from '../config'
 
 // singlton socket instance
 let socket = null
@@ -9,7 +10,7 @@ function getSocket () {
   }
   const token = localStorage.getItem('token')
   socket = io({
-    path: '/graphql',
+    path: config.socketPath,
     reconnection: true,
     autoConnect: !!token,
     reconnectionDelay: 5000,

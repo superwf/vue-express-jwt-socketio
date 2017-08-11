@@ -1,13 +1,9 @@
 import { ME, USERS, CREATE_USER, UPDATE_USER, TOKEN,
   LOGOUT, LOGIN, NO_AUTH, REMOVE_USER, INITIALIZED, ERRORS } from 'store/types'
-import meGql from '../../gql/me.gql'
-import usersGql from '../../gql/users.gql'
-import createUserGql from '../../gql/createUser.gql'
-import updateUserGql from '../../gql/updateUser.gql'
-import removeUserGql from '../../gql/removeUser.gql'
 import findIndex from 'lodash/findIndex'
 import axios from 'axios'
-import { emit } from 'store/helpers'
+import { generateEmitAction, generateEmitActions } from 'store/helpers'
+import { user } from '../../../lib/models'
 
 export default {
   state: {
@@ -46,36 +42,37 @@ export default {
     },
   },
   actions: {
-    [ME] ({ rootGetters, commit }) {
-      const token = localStorage.getItem('token')
-      rootGetters.socket.emit('query', {
-        type: ME,
-        query: meGql,
-        variables: { token }
-      }, data => {
-        commit(data.type, data.data)
+    ...generateEmitActions([{
+      model: user,
+      action: 'me',
+      type: ME,
+      callback: ({ commit }) => {
         commit(INITIALIZED)
-      })
-    },
-    [UPDATE_USER]: emit({
-      type: UPDATE_USER,
-      query: updateUserGql
-    }),
-    [CREATE_USER]: emit({
+      }
+    }, {
+      model: user,
+      type: USERS,
+      action: 'findAll',
+    }, {
+      toRoom: true,
       type: CREATE_USER,
-      query: createUserGql
-    }),
-    [REMOVE_USER]: emit({
-      type: REMOVE_USER,
-      query: removeUserGql
-    }),
-    [USERS] ({ rootGetters, commit }) {
-      return rootGetters.socket.emit('query', {
-        type: USERS,
-        query: usersGql
-      }, data => {
-        commit(data.type, data.data)
-      })
+      model: user,
+      action: 'create',
+    }]),
+    [UPDATE_USER] (context, payload) {
+      return generateEmitAction({
+        type: UPDATE_USER,
+        model: user,
+        action: 'update',
+      })(context, [payload, { fields: ['name', 'password'], where: { id: payload.id } }])
+    },
+    [REMOVE_USER] (context, payload) {
+      return generateEmitAction({
+        toRoom: true,
+        type: REMOVE_USER,
+        model: user,
+        action: 'destroy',
+      })(context, [{ where: { id: payload } }])
     },
     [LOGOUT] ({ commit, rootGetters }) {
       commit(ME, null)

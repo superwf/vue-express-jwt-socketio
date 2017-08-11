@@ -3,9 +3,9 @@ import db from '../db'
 import crypto from 'crypto'
 import errorMessage from '../../lib/errorMessage'
 import config from '../../config'
+import jwt from 'jsonwebtoken'
 import { isUnique } from './validators'
-
-const tableName = 'user'
+import { user as tableName } from '../../lib/models'
 
 // 加密密码方法，若更换则之前添加的用户密码均不可验证
 // 更换之后的用户密码可验证正常
@@ -72,6 +72,23 @@ User.createDefault = () => {
       return User.create(config.defaultUser)
     }
     return user
+  })
+}
+
+User.me = token => {
+  try {
+    const user = jwt.verify(token, config.jwtSecret)
+    return Promise.resolve(user)
+  } catch (e) {
+    return Promise.reject(e)
+  }
+}
+
+const destroy = User.destroy.bind(User)
+
+User.destroy = (...args) => {
+  return destroy(...args).then(() => {
+    return args[0].where
   })
 }
 

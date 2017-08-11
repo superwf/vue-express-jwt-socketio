@@ -33,7 +33,6 @@ export default {
   methods: {
     // broadcast only in room
     $broadcast (...args) {
-      args.push(this.room)
       return this.$store.dispatch(...args)
     }
   }

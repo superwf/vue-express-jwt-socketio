@@ -4,7 +4,7 @@ import crypto from 'crypto'
 import errorMessage from '../../lib/errorMessage'
 import config from '../../config'
 import jwt from 'jsonwebtoken'
-import { isUnique } from './validators'
+// import { isUnique } from './validators'
 import { user as tableName } from '../../lib/models'
 
 // 加密密码方法，若更换则之前添加的用户密码均不可验证
@@ -27,7 +27,10 @@ const User = db.define(tableName, {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
+    unique: {
+      name: 'nameIndex',
+      msg: '名称不能重复'
+    },
     defaultValue: '',
     validate: {
       isLength: {
@@ -35,7 +38,7 @@ const User = db.define(tableName, {
         max: 50,
         msg: errorMessage.user.name.length,
       },
-      isUnique: isUnique(tableName, 'name'),
+      // isUnique: isUnique(tableName, 'name'),
     },
   },
   password: {
@@ -62,7 +65,7 @@ const User = db.define(tableName, {
         user.password = cryptPassword(user.password)
       }
     }
-  }
+  },
 })
 
 // 根据config中的配置创建默认用户
@@ -86,6 +89,7 @@ User.me = token => {
 
 const destroy = User.destroy.bind(User)
 
+// return remove condition for front
 User.destroy = (...args) => {
   return destroy(...args).then(() => {
     return args[0].where

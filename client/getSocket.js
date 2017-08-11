@@ -14,7 +14,7 @@ function getSocket () {
     reconnection: true,
     autoConnect: !!token,
     reconnectionDelay: 5000,
-    // reconnectionFactor: 5000,
+    reconnectionFactor: 5000,
     transports: ['websocket', 'polling'],
     query: {
       token,

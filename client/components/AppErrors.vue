@@ -6,8 +6,9 @@ transition(
   leave-active-class="bounceOutRight"
 )
   .errors.animated(v-if="show", tabindex="100", ref="el")
-    p(v-for="e in errors") {{e.message}}
-    .mask(@click="hide")
+    p(v-for="e in errors")
+      | {{e.message}}
+    button(@click="hide") close
 </template>
 <script>
 import { mapState } from 'vuex'

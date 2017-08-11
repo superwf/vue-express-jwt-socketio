@@ -1,1 +1,0 @@
-query fetchMe($token: String!) { me(token: $token) { id name } }

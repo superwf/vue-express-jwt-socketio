@@ -1,3 +1,0 @@
-mutation removeUser($id: String) {
-  removeUser(id: $id) { id name }
-}

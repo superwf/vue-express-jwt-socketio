@@ -91,7 +91,7 @@ export default {
           token
         }
         socket.once('connect', () => {
-          dispatch(ME)
+          dispatch(ME, token)
         })
         socket.connect()
       }).catch(e => {

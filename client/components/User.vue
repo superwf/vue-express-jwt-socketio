@@ -6,8 +6,6 @@
     loading-button create user
   transition-group(
     name="transition",
-    appear-active-class="fadeInDown",
-    enter-active-class="fadeInDown",
     tag="ul"
   )
     li(v-for="user in users", :key="user.id")
@@ -93,10 +91,11 @@ table, .users
     flex-basis: 100%
 li
   padding-bottom: 20px
+  transition: all 1s
 .actions
   display: inline-block
-.transition-move
-  transition: transform 1s
+// .transition-move
+//   transition: all 1s
 .transition-enter, .transition-leave-to
   transform: translateY(-30px)
   opacity: 0

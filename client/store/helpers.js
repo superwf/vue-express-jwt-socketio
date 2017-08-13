@@ -1,5 +1,5 @@
 import Promise from 'bluebird'
-import { ERRORS } from 'store/types'
+import { ERRORS } from './types'
 import reduce from 'lodash/reduce'
 import castArray from 'lodash/castArray'
 

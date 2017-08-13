@@ -1,23 +1,14 @@
 import io from 'socket.io-client'
 import config from '../../../config'
 import { NO_AUTH, ME } from '../../../client/store/types'
-import path from 'path'
-import fs from 'fs'
-import expect from 'expect'
 import axios from 'axios'
-import { server, ready } from '../../../server/main'
+import { user } from '../../../lib/models'
+import User from '../../../server/models/user'
 
-describe('connect', () => {
-  before(done => {
-    ready.then(done)
-  })
-
-  after(() => {
-    server.close()
-  })
-  it('connect without token', done => {
+describe('test socket connect', () => {
+  it('without token', done => {
     const socket = io(`http://${config.host}:${config.port}`, {
-      path: '/graphql',
+      path: config.socketPath,
       reconnection: false,
       transports: ['websocket', 'polling'],
     })
@@ -28,9 +19,9 @@ describe('connect', () => {
     })
   })
 
-  it('connect with wrong token', done => {
+  it('with wrong token', done => {
     const socket = io(`http://${config.host}:${config.port}`, {
-      path: '/graphql',
+      path: config.socketPath,
       reconnection: false,
       query: {
         token: 'sadfasdfasdfa4322348gdfx',
@@ -44,30 +35,30 @@ describe('connect', () => {
     })
   })
 
-  it('connect with admin', done => {
-    const host = `http://${config.host}:${config.port}`
-    axios.post(`${host}/login`, config.defaultUser).then(result => {
-      // console.log(result)
-      const p = path.resolve('./', 'client/gql/me.gql')
-      const meGql = fs.readFileSync(p, 'utf8')
-      const { token } = result.data
-      const socket = io(`http://${config.host}:${config.port}`, {
-        path: '/graphql',
-        query: {
-          token
-        },
-        transports: ['websocket', 'polling'],
-      })
-      socket.on('connect', () => {
-        socket.emit('query', {
-          type: ME,
-          query: meGql,
-          variables: { token }
-        }, data => {
-          expect(data.type).toBe(ME)
-          expect(data.data.name).toBe(config.defaultUser.name)
-          socket.close()
-          done()
+  it('with admin', done => {
+    User.createDefault().then(() => {
+      const host = `http://${config.host}:${config.port}`
+      axios.post(`${host}/login`, config.defaultUser).then(result => {
+        const { token } = result.data
+        const socket = io(`http://${config.host}:${config.port}`, {
+          path: config.socketPath,
+          query: {
+            token
+          },
+          transports: ['websocket', 'polling'],
+        })
+        socket.on('connect', () => {
+          socket.emit('call', {
+            model: user,
+            action: 'me',
+            type: ME,
+            variables: [token]
+          }, data => {
+            console.log(data)
+            // expect(data.data.name).toBe(config.defaultUser.name)
+            socket.close()
+            done()
+          })
         })
       })
     })

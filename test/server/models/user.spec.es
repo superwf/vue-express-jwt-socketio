@@ -1,10 +1,8 @@
-import expect from 'expect'
 import User, { cryptPassword } from '../../../server/models/user'
-import { dbConnectPromise } from '../../../server/db'
 
 describe('model user', () => {
   before(done => {
-    dbConnectPromise.then(done)
+    User.createDefault().then(() => done())
   })
   beforeEach(done => {
     User.truncate().then(() => done())

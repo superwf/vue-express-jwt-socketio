@@ -1,8 +1,8 @@
 import { ME, USERS, CREATE_USER, UPDATE_USER, TOKEN,
-  LOGOUT, LOGIN, NO_AUTH, REMOVE_USER, INITIALIZED, ERRORS } from 'store/types'
+  LOGOUT, LOGIN, NO_AUTH, REMOVE_USER, INITIALIZED, ERRORS } from '../types'
 import findIndex from 'lodash/findIndex'
 import axios from 'axios'
-import { generateEmitAction, generateEmitActions } from 'store/helpers'
+import { generateEmitAction, generateEmitActions } from '../helpers'
 import { user } from '../../../lib/models'
 
 export default {

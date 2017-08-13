@@ -23,21 +23,24 @@ const verifyToken = (token, socket) => {
   return true
 }
 
+// todo: add more check method here
+const checkMethods = []
 const checkAuthenticate = (user, req) => {
-  if (user && req) {
-    return Promise.resolve(true)
-  }
-  return Promise.reject(false)
+  return Promise.all(checkMethods.map(method => method(user, req)))
+  // if (user && req) {
+  //   return Promise.resolve(true)
+  // }
+  // return Promise.reject(false)
 }
 
-// todo, need validate model, action and variables
-// todo, validate user auth
+// todo: need validate model, action and variables
+// todo: validate user auth
 const callModelAction = (req, socket) => {
   console.log(req)
   const { model, action, type } = req
   const variables = req.variables ? castArray(req.variables) : []
   if (!model || !action) {
-    return Promise.reject(`${model} or ${action} not exist on server`)
+    return Promise.reject('model and action are both needed')
   }
   const { user } = socket
   return checkAuthenticate(user, req).then(ok => {

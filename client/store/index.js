@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
 import { ROOM, CURRENT_ROOM, TOKEN, LOADING, SOCKET_ERROR, CONNECTED, ERRORS, INITIALIZED, NO_AUTH } from './types'
-import getSocket from '@/getSocket'
+import getSocket from '../getSocket'
 
 Vue.use(Vuex)
 

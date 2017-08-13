@@ -10,10 +10,11 @@
     "start": "node server/development-loader.js",
     "build": "node build/build.js",
     "unit": "cross-env NODE_ENV=test karma start test/unit/karma.conf.js",
+    "client:test": "NODE_ENV=test mocha test/client/* -r expect --compilers es:babel-register -w -b",
     "e2e": "NODE_ENV=test node server/e2e-loader.js",
     "test": "npm run unit && npm run e2e",
     "test:server:start": "NODE_ENV=test npm start",
-    "test:server": "NODE_ENV=test mocha test/server/**/* --compilers es:babel-register -w -b",
+    "test:server": "NODE_ENV=test mocha test/server/**/* -r ./test/server/init.js --compilers es:babel-register -w -b",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {

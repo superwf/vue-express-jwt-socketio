@@ -24,11 +24,12 @@ export default {
           button.loading = true
         })
         setTimeout(() => {
-          promise.finally(() => {
+          const restoreLoading = () => {
             loadingButtons.forEach(button => {
               button.loading = false
             })
-          })
+          }
+          promise.then(restoreLoading, restoreLoading)
         }, 2000)
       }
     }

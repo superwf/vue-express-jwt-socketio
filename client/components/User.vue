@@ -12,17 +12,17 @@
       loading-form(:submit="update(user.id)")
         label
           | name
-          input(v-once, :value="user.name", :ref="`name${user.id}`")
+          input(:value="user.name", :ref="`name${user.id}`")
         label
           | password
           input(:ref="`password${user.id}`")
         .actions
           loading-button UPDATE
-          button(@click.prevent="remove(user.id)") REMOVE
+          button(@click.prevent="remove(user.id)") Destroy
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { CREATE_USER, USERS, UPDATE_USER, REMOVE_USER } from 'store/types'
+import { CREATE_USER, USERS, UPDATE_USER, DESTROY_USER } from 'lib/types'
 import broadcast from 'mixins/broadcast'
 import LoadingButton from 'components/LoadingButton'
 import LoadingForm from 'components/LoadingForm'
@@ -75,7 +75,7 @@ export default {
       }
     },
     remove (id) {
-      return this.$broadcast(REMOVE_USER, id)
+      return this.$broadcast(DESTROY_USER, id)
     },
   }
 }

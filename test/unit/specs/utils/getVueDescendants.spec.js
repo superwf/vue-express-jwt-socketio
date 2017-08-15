@@ -2,7 +2,7 @@ import Vue from 'vue'
 import getVueDescendants from 'utils/getVueDescendants'
 import expect from 'expect'
 
-describe.only('utils/getVueDescendants', () => {
+describe('utils/getVueDescendants', () => {
   const compA = {
     name: 'comp-a',
     age: 1,

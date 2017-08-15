@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
-import { ROOM, CURRENT_ROOM, TOKEN, LOADING, SOCKET_ERROR, CONNECTED, ERRORS, INITIALIZED, NO_AUTH } from './types'
+import { ROOM, CURRENT_ROOM, TOKEN, LOADING, SOCKET_ERROR, CONNECTED, ERRORS, INITIALIZED, NO_AUTH } from 'lib/types'
 import getSocket from '../getSocket'
+import storage from '../storage'
 
 Vue.use(Vuex)
 
@@ -75,18 +76,17 @@ const generateStore = async () => {
       socket.emit('join', room)
     }
   })
-  const token = localStorage.getItem('token')
+  const token = storage.get('token')
   if (token) {
     store.commit(TOKEN, token)
   }
 
-  // bind all 'commit' event from socket
+  // bind 'vuex' event from socket
   socket.on('vuex', data => {
-    if (data.errors) {
-      store.commit(ERRORS, data.errors)
-    } else {
-      store.commit(data.type, data.data)
+    if (!data || !data.type) {
+      throw new Error(`${JSON.stringify(data)} should has type`)
     }
+    store.commit(data.type, data.data)
   })
   socket.on('error', err => {
     store.commit(SOCKET_ERROR, err)
@@ -99,9 +99,6 @@ const generateStore = async () => {
   })
   socket.on('disconnect', () => {
     store.commit(CONNECTED, false)
-  })
-  socket.on('reconnect_attempt', count => {
-    console.log(count)
   })
   return store
 }

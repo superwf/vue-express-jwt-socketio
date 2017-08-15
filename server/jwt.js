@@ -12,6 +12,9 @@ export default function jwtApp (app) {
   app.post(
     '/login',
     function (req, res) {
+      res.header('Access-Control-Allow-Origin', '*')
+      // res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+      // res.header('Access-Control-Allow-Methods', 'POST,OPTIONS')
       const { name, password } = req.body
       User.findOne({ where: { name } }).then(user => {
         if (user && user.password === cryptPassword(password)) {

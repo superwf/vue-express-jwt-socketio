@@ -46,7 +46,7 @@ module.exports = {
     }, {
       test: /\.js$/,
       loader: 'babel-loader',
-      include: [resolve('client'), resolve('test'), resolve('config')]
+      include: [resolve('client'), resolve('test'), resolve('config'), resolve('lib')]
     }, {
       test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
       loader: 'url-loader',
@@ -68,10 +68,6 @@ module.exports = {
         limit: 10000,
         name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
       }
-    }, {
-      test: /\.gql$/,
-      exclude: /node_modules/,
-      loader: 'raw-loader'
     }, {
       test: /\.pug$/,
       loader: 'pug-loader'

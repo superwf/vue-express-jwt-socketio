@@ -14,7 +14,7 @@ transition(
 import { mapState, mapActions } from 'vuex'
 import { isDevelopment } from '../../config/env'
 import config from '../../config'
-import { LOGIN } from 'store/types'
+import { LOGIN } from 'lib/types'
 
 export default {
   name: 'login',

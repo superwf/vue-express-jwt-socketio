@@ -6,6 +6,7 @@ const env = require(`./${nodeEnv}.env`)
 
 const base = {
   env,
+  protocol: 'http',
   index: path.resolve(__dirname, '../dist/index.html'),
   assetsRoot: path.resolve(__dirname, '../dist'),
   assetsSubDirectory: 'static',
@@ -64,6 +65,7 @@ const config = {
     host: 'localhost',
     port: 9080,
     jwtSecret: 'testsecret',
+    proxyTable: {},
     mysql: {
       database: 'vue_express_test',
       username: 'test',

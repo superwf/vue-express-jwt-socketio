@@ -1,15 +1,16 @@
 import io from 'socket.io-client'
 import config from '../config'
+import storage from './storage'
 
 // singlton socket instance
 let socket = null
 
-function getSocket () {
-  if (socket) {
+function getSocket (forceCreateAnother = false) {
+  if (socket && !forceCreateAnother) {
     return socket
   }
-  const token = localStorage.getItem('token')
-  socket = io({
+  const token = storage.get('token')
+  socket = io(`${config.protocol}://${config.host}:${config.port}`, {
     path: config.socketPath,
     reconnection: true,
     autoConnect: !!token,
@@ -26,7 +27,7 @@ function getSocket () {
     },
   })
   socket.on('reconnect_attempt', () => {
-    const token = localStorage.getItem('token')
+    const token = storage.get('token')
     socket.io.opts.query = {
       token
     }

@@ -5,9 +5,9 @@ const { defaultUser } = require('../../../config').default
 module.exports = {
   'login progress': function (browser) {
     // automatically uses dev Server port from /config.index.js
-    // default: http://localhost:8080
     // see nightwatch.conf.js
     const devServer = browser.globals.devServerURL
+    console.log(devServer)
 
     browser
       .url(devServer)

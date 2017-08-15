@@ -1,5 +1,5 @@
 import { mapState, mapGetters } from 'vuex'
-import { ROOM } from 'store/types'
+import { ROOM } from 'lib/types'
 
 export default {
   computed: {

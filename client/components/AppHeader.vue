@@ -12,11 +12,13 @@ transition(
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import { ME, LOGOUT } from 'store/types'
+import { ME, LOGOUT } from 'lib/types'
+import storage from '@/storage'
+
 export default {
   name: 'app-header',
   beforeMount () {
-    const token = localStorage.getItem('token')
+    const token = storage.get('token')
     this.fetchMe(token)
   },
   computed: {

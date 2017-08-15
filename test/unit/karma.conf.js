@@ -7,6 +7,7 @@ require('babel-register')({
 })
 
 var webpackConfig = require('../../build/webpack.test.conf')
+// const config = require('../../config').default
 
 module.exports = function (config) {
   config.set({
@@ -14,8 +15,11 @@ module.exports = function (config) {
     // 1. install corresponding karma launcher
     //    http://karma-runner.github.io/0.13/config/browsers.html
     // 2. add it to the `browsers` array below.
-    browsers: ['PhantomJS'],
-    frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim'],
+    browsers: [
+      // 'PhantomJS',
+      'Chrome',
+    ],
+    frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim', 'expect'],
     reporters: ['spec', 'coverage'],
     files: ['./index.js'],
     preprocessors: {
@@ -31,6 +35,9 @@ module.exports = function (config) {
         { type: 'lcov', subdir: '.' },
         { type: 'text-summary' }
       ]
+    },
+    proxies: {
+      '/login': 'http://localhost:9080/login',
     }
   })
 }

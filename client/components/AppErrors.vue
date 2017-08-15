@@ -6,7 +6,7 @@ transition(
   leave-active-class="bounceOutRight"
 )
   .errors.animated(v-if="show", tabindex="100", ref="el")
-    p(v-for="e in errors")
+    p(v-for="e in errors", :key="e.message")
       | {{e.message}}
     button(@click="hide") close
 </template>

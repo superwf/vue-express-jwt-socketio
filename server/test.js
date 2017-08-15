@@ -1,10 +1,20 @@
 import express from 'express'
 import path from 'path'
 import webpack from 'webpack'
+import proxyMiddleware from 'http-proxy-middleware'
 import webpackConfig from '../build/webpack.test.conf'
 import config from '../config'
 
 export default function (app) {
+  const { proxyTable } = config
+  Object.keys(proxyTable).forEach(function (context) {
+    var options = proxyTable[context]
+    if (typeof options === 'string') {
+      options = { target: options }
+    }
+    app.use(proxyMiddleware(options.filter || context, options))
+  })
+
   var compiler = webpack(webpackConfig)
 
   var devMiddleware = require('webpack-dev-middleware')(compiler, {

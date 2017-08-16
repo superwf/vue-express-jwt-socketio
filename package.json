@@ -18,6 +18,7 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "async": "^2.5.0",
     "axios": "^0.16.2",
     "bluebird": "^3.5.0",
     "express-jwt": "^5.3.0",

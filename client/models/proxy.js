@@ -1,6 +1,8 @@
 // proxy all Model methods and variables to server end
 // make front can use sequelize Model api
 
+// check if the last param is the broadcast option
+// the option must has type and room keys
 const isBroadcastOption = option => {
   if (option) {
     const keys = Object.keys(option)

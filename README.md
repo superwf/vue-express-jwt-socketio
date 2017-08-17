@@ -1,8 +1,8 @@
 # vue-express-jwt
 
-> A Vue.js example project
+> A Vue.js fullstack example
 > vue front end
-> graphql backend, auth by jwt
+> express, socket.io backend, auth by jwt
 
 ## Build Setup
 
@@ -14,4 +14,6 @@ npm install
 npm start
 
 # NOTE
-Only has dev env, no build step yet.
+This is not a lib, tool nor framework. It is a example template to show how combine server and front together work.
+First this is a graphql practice, and later add socket.io for transport data, and later remove graphql.
+I feel that graphql is just for upgrade from restful, if use websocket, it has no advantage (personal idea).

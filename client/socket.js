@@ -27,6 +27,7 @@ function getSocket (forceCreateAnother = false) {
       token
     }
   })
+  window.socket = socket
   return socket
 }
 export default getSocket

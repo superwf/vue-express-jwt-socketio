@@ -3,8 +3,15 @@
   scroll-table(:type="type", urlPrefix="/users")
     thead
       th Email
-    tbody(v-if="users.rows")
-      tr(v-for="user in users.rows")
+    transition-group(
+      v-if="users.rows",
+      name="list",
+      enter-active-class="slideInUp",
+      leave-active-class="slideOutDown",
+      tag="tbody",
+      mode="out-in",
+    )
+      tr.animated(v-for="user in users.rows", :key="user.id")
         td {{ user.email }}
 </template>
 <script>
@@ -40,3 +47,12 @@ export default {
   }
 }
 </script>
+<style lang="sass" scoped>
+.list-leave-to, .list-move
+  position: absolute
+  width: 98%
+tr
+  transition: transform .5s
+.slideOutDown
+  opacity: .2
+</style>

@@ -59,7 +59,10 @@ export default {
     ...mapGetters(['emitter']),
   },
   mounted () {
-    this.emitter.$on('captchaRefresh', () => this.getCaptcha())
+    this.emitter.$on('captchaRefresh', () => {
+      this.getCaptcha()
+      this.value = ''
+    })
   },
   beforeDestroy () {
     this.emitter.$off('captchaRefresh')

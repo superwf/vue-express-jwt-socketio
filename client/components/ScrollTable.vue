@@ -5,7 +5,7 @@
   pagination(:urlPrefix="urlPrefix", :currentPage="currentPage", :lastPage="lastPage", :urlBuilder="urlBuilder", modifiers="is-centered")
 </template>
 <script>
-import Pagination from 'vue-bulma-pagination'
+import Pagination from 'components/Pagination'
 import config from '@/config'
 
 export default {
@@ -48,7 +48,6 @@ export default {
   },
   watch: {
     '$route.query': function (val) {
-      console.log(val)
       this.load()
     }
   },
@@ -80,4 +79,9 @@ table,
 .pagination
   width: 20em
   margin: 0 auto
+  position: fixed
+  transform: bottom .5s
+  bottom: .5em
+  left: 50%
+  transform: translateX(-50%)
 </style>

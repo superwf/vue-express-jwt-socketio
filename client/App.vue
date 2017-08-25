@@ -2,18 +2,32 @@
 #app
   app-header
   app-notifications
-  router-view
+  transition(
+    name="router-view",
+    enter-active-class="zoomIn",
+    leave-active-class="zoomOut",
+    mode="out-in",
+  )
+    router-view.animated(v-if="me.email")
 </template>
 
 <script>
 import AppHeader from 'views/AppHeader'
 import AppNotifications from 'views/Notifications'
+import { mapState } from 'vuex'
 
 export default {
   name: 'app',
   components: {
     AppHeader,
     AppNotifications,
+  },
+  computed: {
+    ...mapState({
+      me (state) {
+        return state.user.me
+      },
+    })
   },
 }
 </script>

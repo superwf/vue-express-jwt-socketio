@@ -1,26 +1,38 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 const path = require('path')
-const nodeEnv = require('./env').env
-
-const env = require(`./${nodeEnv}.env`)
+const NODE_ENV = process.env.NODE_ENV || 'development'
 
 const base = {
-  env,
+  env: {
+    NODE_ENV,
+    isDevelopment: NODE_ENV === 'development',
+    isProduction: NODE_ENV === 'production',
+    isTest: NODE_ENV === 'test',
+  },
   protocol: 'http',
+  host: 'localhost',
+  port: 8080,
   index: path.resolve(__dirname, '../dist/index.html'),
   assetsRoot: path.resolve(__dirname, '../dist'),
   assetsSubDirectory: 'static',
   assetsPublicPath: '/',
   tokenExpiresIn: '1d',
+  displaySQL: false,
+  jwtSecret: 'yourproductionjwtsecret',
+  sessionSecret: 'mysecret',
+  notificationDuration: 3000,
+  captchaSize: 4,
+  captchaExpiresIn: 5 * 60000, // 5 min
+  needCaptchaPaths: ['/login', '/regist'],
   socketPath: '/socket',
   defaultUser: {
-    name: 'admin',
-    password: 'admin',
-  }
+    email: 'superwf@gmail.com',
+    password: 'superwf',
+  },
 }
 
 const config = {
-  build: {
+  production: {
     ...base,
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as
@@ -34,7 +46,6 @@ const config = {
     // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
     bundleAnalyzerReport: process.env.npm_config_report,
-    jwtSecret: 'yourproductionjwtsecret',
     mysql: {
       database: 'test',
       username: 'test',
@@ -43,8 +54,6 @@ const config = {
   },
   development: {
     ...base,
-    host: 'localhost',
-    port: 8080,
     autoOpenBrowser: true,
     proxyTable: {},
     // CSS Sourcemaps off by default because relative paths are "buggy"
@@ -53,7 +62,6 @@ const config = {
     // In our experience, they generally work as expected,
     // just be aware of this issue when enabling this option.
     cssSourceMap: false,
-    jwtSecret: 'safdasfasfdsafdasf',
     mysql: {
       database: 'vue_express',
       username: 'test',
@@ -62,9 +70,7 @@ const config = {
   },
   test: {
     ...base,
-    host: 'localhost',
     port: 9080,
-    jwtSecret: 'testsecret',
     proxyTable: {},
     mysql: {
       database: 'vue_express_test',
@@ -74,4 +80,4 @@ const config = {
   },
 }
 
-export default config[nodeEnv]
+export default config[NODE_ENV]

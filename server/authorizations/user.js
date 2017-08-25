@@ -5,8 +5,10 @@ export default (user, req) => {
   let result
   if (req.model === models.user) {
     if ([
+      'me',
+      'regist',
       'updateEmail',
-      'updatePassword'
+      'updatePassword',
     ].indexOf(req.action) > -1) {
       result = true
     }

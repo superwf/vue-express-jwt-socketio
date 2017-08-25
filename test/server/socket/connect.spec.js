@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
 import config from '../../../config'
-import { NO_AUTH, ME } from '../../../client/store/types'
+import { NO_AUTH, ME } from '../../../lib/types'
 import axios from 'axios'
 import { user } from '../../../lib/models'
 import User from '../../../server/models/user'
@@ -35,10 +35,14 @@ describe('test socket connect', () => {
     })
   })
 
-  it('with admin', done => {
+  it(`with admin user ${config.defaultUser.email}`, done => {
     User.createDefault().then(() => {
       const host = `http://${config.host}:${config.port}`
-      axios.post(`${host}/login`, config.defaultUser).then(result => {
+      axios.post(`${host}/login`, {
+        email: config.defaultUser.email,
+        password: config.defaultUser.password,
+        captcha: 'wang'
+      }).then(result => {
         const { token } = result.data
         const socket = io(`http://${config.host}:${config.port}`, {
           path: config.socketPath,
@@ -48,14 +52,12 @@ describe('test socket connect', () => {
           transports: ['websocket', 'polling'],
         })
         socket.on('connect', () => {
-          socket.emit('call', {
+          socket.emit('modelCall', {
             model: user,
             action: 'me',
-            type: ME,
             variables: [token]
-          }, data => {
-            console.log(data)
-            // expect(data.data.name).toBe(config.defaultUser.name)
+          }, (_, data) => {
+            expect(data.email).toBe(config.defaultUser.email)
             socket.close()
             done()
           })

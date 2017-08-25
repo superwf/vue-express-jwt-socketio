@@ -27,6 +27,8 @@ module.exports = {
       'mixins': resolve('client/mixins'),
       'utils': resolve('client/utils'),
       'style': resolve('client/style'),
+      'models': resolve('client/models'),
+      'views': resolve('client/views'),
       'components': resolve('client/components'),
     }
   },

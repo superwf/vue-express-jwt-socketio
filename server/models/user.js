@@ -1,10 +1,9 @@
 import Sequelize from 'sequelize'
 import db from '../db'
 import crypto from 'crypto'
-import errorMessage from '../../lib/errorMessage'
+import messages from '../../lib/messages'
 import config from '../../config'
 import jwt from 'jsonwebtoken'
-// import { isUnique } from './validators'
 import { user as tableName } from '../../lib/models'
 
 // 加密密码方法，若更换则之前添加的用户密码均不可验证
@@ -24,21 +23,23 @@ const User = db.define(tableName, {
     defaultValue: Sequelize.UUIDV1,
     primaryKey: true
   },
-  name: {
+  email: {
     type: Sequelize.STRING,
     allowNull: false,
     unique: {
-      name: 'nameIndex',
-      msg: '名称不能重复'
+      name: 'emailIndex',
+      msg: 'Email不能重复'
     },
     defaultValue: '',
     validate: {
-      isLength: {
-        min: 1,
-        max: 50,
-        msg: errorMessage.user.name.length,
+      isEmail: {
+        msg: messages.user.email.type
       },
-      // isUnique: isUnique(tableName, 'name'),
+      isLength: {
+        min: 5,
+        max: 50,
+        msg: messages.user.email.length(5, 50),
+      },
     },
   },
   password: {
@@ -47,12 +48,17 @@ const User = db.define(tableName, {
     defaultValue: '',
     validate: {
       isLength: {
-        min: 1,
+        min: 5,
         max: 50,
-        msg: errorMessage.user.password.length,
+        msg: messages.user.password.length(5, 50),
       },
     },
   },
+  locked: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  }
 }, {
   // crypt password
   // do not use 'beforeSave', it does not work
@@ -70,7 +76,7 @@ const User = db.define(tableName, {
 
 // 根据config中的配置创建默认用户
 User.createDefault = () => {
-  return User.findOne({ where: { name: config.defaultUser.name } }).then(user => {
+  return User.findOne({ where: { email: config.defaultUser.email } }).then(user => {
     if (!user) {
       return User.create(config.defaultUser)
     }
@@ -78,21 +84,22 @@ User.createDefault = () => {
   })
 }
 
+User.isAdmin = user => !!user && (user.email === config.defaultUser.email)
+
 User.me = token => {
   try {
     const user = jwt.verify(token, config.jwtSecret)
+    user.isAdmin = User.isAdmin(user)
     return Promise.resolve(user)
   } catch (e) {
     return Promise.reject(e)
   }
 }
 
-const destroy = User.destroy.bind(User)
-
-// return remove condition for front
-User.destroy = (...args) => {
-  return destroy(...args).then(() => {
-    return args[0].where
+User.regist = user => {
+  return User.create({
+    email: user.email,
+    password: user.password
   })
 }
 

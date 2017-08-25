@@ -1,4 +1,4 @@
 import expect from 'expect'
-import '../../server/main'
+// import '../../server/main'
 
 global.expect = expect

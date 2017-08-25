@@ -7,7 +7,7 @@ const config = require('../config').default
 const debounce = require('lodash/debounce')
 const watch = require('node-watch')
 
-const main = 'server/main.js'
+const main = 'server/main-loader.js'
 
 let serverProcess = cp.fork(main)
 

@@ -1,11 +1,17 @@
 import express from 'express'
-import jwt from './jwt'
-
-const nodeEnv = require('../config/env').env
-const envApp = require(`./${nodeEnv}`).default
+import bodyParser from 'body-parser'
+import session from 'express-session'
+import login from './restful/login'
+import captcha from './restful/captcha'
+import config from '../config'
 
 const app = express()
-jwt(app)
-envApp(app)
+app.use(bodyParser.json())
+app.use(session({
+  secret: config.sessionSecret,
+  // cookie: { secure: true }
+}))
+captcha(app)
+login(app)
 
 export default app

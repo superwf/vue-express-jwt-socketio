@@ -26,7 +26,7 @@ var webpackConfig = merge(baseConfig, {
       inject: true
     }),
     new webpack.DefinePlugin({
-      'process.env': require('../config/test.env')
+      'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
     })
   ]
 })

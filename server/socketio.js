@@ -2,9 +2,10 @@ import jwt from 'jsonwebtoken'
 import http from 'http'
 import socketio from 'socket.io'
 import config from '../config'
-import { ERRORS, NO_AUTH } from '../lib/types'
+import { NO_AUTH } from '../lib/types'
 import models from './models'
 import castArray from 'lodash/castArray'
+import checkAuthenticate from './authorizations'
 
 // verify token, and attach user to socket
 const verifyToken = (token, socket) => {
@@ -23,28 +24,21 @@ const verifyToken = (token, socket) => {
   return true
 }
 
-// todo: add more check method here
-const checkMethods = []
-const checkAuthenticate = (user, req) => {
-  return Promise.all(checkMethods.map(method => method(user, req)))
-  // if (user && req) {
-  //   return Promise.resolve(true)
-  // }
-  // return Promise.reject(false)
-}
-
 // todo: need validate model, action and variables
 // todo: validate user auth
 const callModelAction = (req, socket) => {
   const { model, action } = req
   const variables = req.variables ? castArray(req.variables) : []
   if (!model || !action) {
-    return Promise.reject('callModelAction: model and action are both needed')
+    return Promise.reject(new Error('callModelAction: model and action are both needed'))
   }
   const { user } = socket
   return checkAuthenticate(user, req).then(ok => {
     if (ok) {
-      return models[model][action](...variables)
+      // 优先调用`_${action}`的方法
+      let _action = `_${action}`
+      _action = _action in models[model] ? _action : action
+      return models[model][_action](...variables)
     } else {
       throw new Error('NO_AUTH')
     }
@@ -55,11 +49,11 @@ const callInstanceAction = (req, socket) => {
   const { target, model, action } = req
   const variables = req.variables ? castArray(req.variables) : []
   if (!model || !action) {
-    return Promise.reject('callInstanceAction: model and action are both needed')
+    return Promise.reject(new Error('callInstanceAction: model and action are both needed'))
   }
   // todo: use primary key to replace 'id'
   if (!target.id) {
-    return Promise.reject('callInstanceAction: target must has id')
+    return Promise.reject(new Error('callInstanceAction: target must has id'))
   }
   const { user } = socket
   return checkAuthenticate(user, req).then(ok => {
@@ -111,15 +105,13 @@ export default function socketIO (app) {
     })
     socket.on('modelCall', (...args) => {
       const [req, callback] = args
-      // let callback = args[args.length - 1]
-      // callback = typeof callback === 'function' ? callback : false
 
       callModelAction(req, socket).then(data => {
         if (callback) {
-          callback(data)
+          callback(null, data)
         }
         // else {
-        //   // 'vuex' event for vuex on client to commit the data
+        //   // 'vuex' event for vuex on clint to commit the data
         //   socket.emit('vuex', data)
         // }
         // if has rooms, broadcast to every room
@@ -129,20 +121,15 @@ export default function socketIO (app) {
             data
           })
         }
-      }).catch(errors => {
-        if (callback) {
-          callback({
-            type: ERRORS,
-            errors: errors.errors ? errors.errors : errors
-          })
-        }
+      }, errors => {
+        callback(errors.errors ? errors.errors : errors)
       })
     })
     socket.on('instanceCall', (...args) => {
       const [req, callback] = args
 
       callInstanceAction(req, socket).then(data => {
-        callback(data)
+        callback(null, data)
         console.log(req)
         if (req.room) {
           socket.to(req.room).emit('vuex', {
@@ -152,10 +139,7 @@ export default function socketIO (app) {
         }
       }).catch(errors => {
         if (callback) {
-          callback({
-            type: ERRORS,
-            errors: errors.errors ? errors.errors : errors
-          })
+          callback(errors.errors ? errors.errors : errors)
         }
       })
     })

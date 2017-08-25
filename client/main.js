@@ -3,18 +3,19 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import generateStore from './store'
+import Vuelidate from 'vuelidate'
+import generateStore from '@/store'
 
+const store = generateStore()
+
+Vue.use(Vuelidate)
 Vue.config.productionTip = false
 
-generateStore().then(store => {
-  /* eslint-disable no-new */
-  new Vue({
-    el: '#app',
-    router,
-    store,
-    // template: '<App/>',
-    render: h => h(App)
-    // components: { App }
-  })
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  store,
+  template: '<App/>',
+  components: { App },
 })

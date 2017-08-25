@@ -6,12 +6,17 @@
 
 ## Build Setup
 
+install dependencies
 ``` bash
-# install dependencies
-npm install
+yarn
+```
 
-# serve with hot reload at localhost:8080
-npm start
+## Run in development env
+serve with hot reload at localhost:8080
+
+``` bash
+yarn start
+```
 
 # NOTE
 This is not a lib, tool nor framework. It is a example template to show how combine server and front together work.

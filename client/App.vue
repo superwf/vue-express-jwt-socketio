@@ -1,47 +1,35 @@
 <template lang="pug">
 #app
   app-header
-  app-errors
-  router-view(v-if="me")
-  login-form
-  socket-reconnect
+  app-notifications
+  router-view
 </template>
 
 <script>
-import AppHeader from 'components/AppHeader'
-import AppErrors from 'components/AppErrors'
-import SocketReconnect from 'components/SocketReconnect'
-import LoginForm from 'components/Login'
-import { mapState } from 'vuex'
+import AppHeader from 'views/AppHeader'
+import AppNotifications from 'views/Notifications'
+
 export default {
   name: 'app',
   components: {
     AppHeader,
-    AppErrors,
-    SocketReconnect,
-    LoginForm,
-  },
-  computed: {
-    ...mapState({
-      me: state => state.user.me
-    })
+    AppNotifications,
   },
 }
 </script>
 
 <style lang="sass">
-@import "style/animate.css";
-@import "style/main.sass";
+@import "~bulma"
 
-#app
-  font-family: 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing: antialiased
-  -moz-osx-font-smoothing: grayscale
-  text-align: center
-  color: #2c3e50
-html, body
+@import "~animate.css"
+.animated
+  animation-duration: .5s
+
+$fa-font-path: '~font-awesome/fonts/'
+@import "~font-awesome/scss/font-awesome"
+
+html
+  font-family: 'Microsoft Yahei', Avenir, Helvetica, Arial, 'sans-serif'
+html, body, #app
   height: 100%
-  width: 100%
-  margin: 0
-  overflow: hidden
 </style>

@@ -73,16 +73,18 @@ const modelProxy = (model, socket) => {
             action: property,
             variables,
           }
-          socket.emit('modelCall', req, response => {
-            // proxy instance
-            if (property === 'findOne') {
-              response = instanceProxy(response, socket, model)
+          socket.emit('modelCall', req, (err, response) => {
+            if (err) {
+              return reject(err)
             }
-            if (property === 'findAll') {
-              response = response.map(res => instanceProxy(res, socket, model))
-            }
-
             if (response !== undefined) {
+              // proxy instance
+              if (property === 'findOne') {
+                response = instanceProxy(response, socket, model)
+              }
+              if (property === 'findAll') {
+                response = response.map(res => instanceProxy(res, socket, model))
+              }
               resolve(response)
             } else {
               reject(new Error(`no response from req ${JSON.stringify(req)}`))

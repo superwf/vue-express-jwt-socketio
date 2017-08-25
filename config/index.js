@@ -25,6 +25,10 @@ const base = {
   captchaExpiresIn: 5 * 60000, // 5 min
   needCaptchaPaths: ['/login', '/regist'],
   socketPath: '/socket',
+  // 系统默认分页参数
+  page: {
+    limit: 2,
+  },
   defaultUser: {
     email: 'superwf@gmail.com',
     password: 'superwf',

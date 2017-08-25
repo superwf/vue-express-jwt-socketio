@@ -103,9 +103,7 @@ export default function socketIO (app) {
     socket.on('leave', room => {
       socket.leave(room)
     })
-    socket.on('modelCall', (...args) => {
-      const [req, callback] = args
-
+    socket.on('modelCall', (req, callback) => {
       callModelAction(req, socket).then(data => {
         if (callback) {
           callback(null, data)

@@ -16,5 +16,11 @@ export default new Router({
     component (resolve) {
       return require(['views/News'], resolve)
     }
+  }, {
+    path: '/users',
+    name: 'Users',
+    component (resolve) {
+      return require(['views/Users'], resolve)
+    }
   }],
 })

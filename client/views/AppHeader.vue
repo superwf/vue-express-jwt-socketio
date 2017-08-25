@@ -24,6 +24,7 @@
     button.animated.logout.button.is-info(v-if="showLogout", @click="logout") 退出系统
   nav.center
     router-link(to="/news") News
+    router-link(to="/users") Users
 </template>
 <script>
 import LoginForm from 'views/Login'
@@ -63,9 +64,6 @@ export default {
   position: relative
   .left, .right
     position: absolute
-  .center
-    width: 100%
-    text-align: center
   .left
     left: 1em
   .right
@@ -74,4 +72,9 @@ export default {
   position: absolute
   right: 1em
   top: 4em
+.center
+  width: 100%
+  text-align: center
+  a
+    padding-right: 1em
 </style>

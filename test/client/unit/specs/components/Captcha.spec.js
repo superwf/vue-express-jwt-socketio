@@ -6,7 +6,7 @@ import makeStore from 'store/index'
 describe('验证码插件', () => {
   const store = makeStore()
   it('focus时通过/captcha接口获取验证码', async () => {
-    const vm = new Vue(Captcha).$mount()
+    const vm = new Vue({ ...Captcha, store }).$mount()
     expect(vm.value).toBe('')
     expect(vm.img).toBe('')
     await vm.getCaptcha()
@@ -18,10 +18,7 @@ describe('验证码插件', () => {
   })
 
   it('test $on "refresh" to refresh captcha', async () => {
-    const vm = new Vue({
-      ...Captcha,
-      store,
-    }).$mount()
+    const vm = new Vue({ ...Captcha, store }).$mount()
     const spy = expect.spyOn(vm, 'getCaptcha')
     expect(spy.calls.length).toBe(0)
     vm.emitter.$emit('captchaRefresh')
@@ -30,7 +27,7 @@ describe('验证码插件', () => {
   })
 
   it('test input wrapper active class', async () => {
-    const vm = new Vue(Captcha).$mount()
+    const vm = new Vue({ ...Captcha, store }).$mount()
     const wrapper = vm.$el.querySelector('.is-expanded')
     expect(wrapper.classList.contains('active')).toBe(false)
     await vm.getCaptcha()
@@ -38,7 +35,7 @@ describe('验证码插件', () => {
   })
 
   it('focus input only call getCaptcha once', () => {
-    const vm = new Vue(Captcha).$mount()
+    const vm = new Vue({ ...Captcha, store }).$mount()
     const spy = expect.spyOn(vm, 'getCaptcha')
     expect(spy.calls.length).toBe(0)
     const input = vm.$el.querySelector('input')
@@ -50,7 +47,7 @@ describe('验证码插件', () => {
   })
 
   it('click .img call getCaptcha', async () => {
-    const vm = new Vue(Captcha).$mount()
+    const vm = new Vue({ ...Captcha, store }).$mount()
     const spy = expect.spyOn(vm, 'getCaptcha').andCallThrough()
     await vm.getCaptcha()
     expect(spy.calls.length).toBe(1)

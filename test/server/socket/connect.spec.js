@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
 import config from '../../../config'
-import { NO_AUTH, ME } from '../../../lib/types'
+import { NO_AUTH } from '../../../lib/types'
 import axios from 'axios'
 import { user } from '../../../lib/models'
 import User from '../../../server/models/user'

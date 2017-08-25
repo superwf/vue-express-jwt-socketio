@@ -7719,6 +7719,10 @@ void-elements@^2.0.0, void-elements@^2.0.1:
   version "2.0.1"
   resolved "http://registry.npm.taobao.org/void-elements/download/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
+vue-bulma-pagination@^1.2.0:
+  version "1.2.0"
+  resolved "http://registry.npm.taobao.org/vue-bulma-pagination/download/vue-bulma-pagination-1.2.0.tgz#2771ffe8f7869e93020fee9057931faa346d141b"
+
 vue-hot-reload-api@^2.1.0:
   version "2.1.0"
   resolved "http://registry.npm.taobao.org/vue-hot-reload-api/download/vue-hot-reload-api-2.1.0.tgz#9ca58a6e0df9078554ce1708688b6578754d86de"

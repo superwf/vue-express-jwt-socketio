@@ -1,4 +1,4 @@
-import { ME, TOKEN, LOGIN, LOGOUT, ERROR } from 'lib/types'
+import { ME, TOKEN, LOGIN, LOGOUT, ERROR, USER_LIST } from 'lib/types'
 import axios from 'axios'
 import storage from '../storage'
 import User from 'models/user'
@@ -7,12 +7,16 @@ export default {
   state: {
     me: {},
     token: storage.get('token') || null,
+    list: {},
     loginError: null,
   },
   mutations: {
     [ME] (state, payload) {
       state.me = payload
     },
+    [USER_LIST] (state, payload) {
+      state.list = payload
+    }
   },
   actions: {
     [ME] ({ commit }) {
@@ -55,6 +59,12 @@ export default {
       commit(TOKEN, null)
       commit(ME, {})
       socket.close()
-    }
+    },
+    [USER_LIST] ({ commit }, query) {
+      return User.findAndCountAll(query).then(res => {
+        commit(USER_LIST, res)
+        return res
+      })
+    },
   },
 }

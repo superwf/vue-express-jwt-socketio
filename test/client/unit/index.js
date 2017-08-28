@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import expect from 'expect'
+import Router from 'vue-router'
 import Vuelidate from 'vuelidate'
 
+Vue.use(Router)
 Vue.config.productionTip = false
 Vue.config.devtools = false
 Vue.use(Vuelidate)

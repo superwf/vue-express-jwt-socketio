@@ -17,7 +17,7 @@ describe('models/user', () => {
         token: result.data.token
       }
       socket.connect()
-      socket.on('connect', () => {
+      socket.once('connect', () => {
         done()
       })
     })

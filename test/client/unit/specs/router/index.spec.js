@@ -2,6 +2,7 @@ import getSocket from '@/socket'
 import router from '@/router'
 import config from '@/config'
 import axios from 'axios'
+import { waitTime } from '../../helpers'
 
 describe('test router beforeHook', () => {
   it('router should emit join and leave room when changing', async () => {
@@ -28,15 +29,11 @@ describe('test router beforeHook', () => {
       })
     })
     router.push({ name: 'News' })
+    await waitTime(16)
     expect(spy).toHaveBeenCalledWith('join', 'News')
     // vue-router delay router switch for some time
-    await new Promise(resolve => {
-      setTimeout(resolve, 16)
-    })
     router.push({ name: 'Users' })
-    await new Promise(resolve => {
-      setTimeout(resolve, 16)
-    })
+    await waitTime(16)
     expect(spy).toHaveBeenCalledWith('leave', 'News')
     expect(spy).toHaveBeenCalledWith('join', 'Users')
 

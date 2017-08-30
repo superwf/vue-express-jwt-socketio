@@ -30,7 +30,6 @@ const instanceProxy = (obj, socket, model) => {
           option = {}
         }
         if (socket.io.readyState !== 'open') {
-          console.log(211)
           return Promise.reject(new Error('socket closed'))
         }
         return new Promise((resolve, reject) => {
